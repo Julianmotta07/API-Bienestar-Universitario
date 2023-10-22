@@ -1,7 +1,7 @@
-package src.ui;
+package ui;
 
-import src.Exceptions.*;
-import src.model.BienestarController;
+import Exceptions.*;
+import model.BienestarController;
 
 import java.util.Scanner;
 

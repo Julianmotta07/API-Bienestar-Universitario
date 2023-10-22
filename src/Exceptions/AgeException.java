@@ -1,4 +1,4 @@
-package src.Exceptions;
+package Exceptions;
 
 public class AgeException extends Exception {
     public AgeException(String message) {

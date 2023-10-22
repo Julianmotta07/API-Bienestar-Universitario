@@ -1,6 +1,6 @@
-package src.model;
+package model;
 
-import src.Exceptions.*;
+import Exceptions.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -29,15 +29,15 @@ public class BienestarController {
     }
 
     public String editStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
-       Student student = searchStudent(studentCode);
-       student.setName(name != null ? name : student.getName());
-       student.setLastName(lastName != null ? lastName : student.getLastName());
-       student.setAge(age != 0 ? age : student.getAge());
-       student.setSex(sex != 'N' ? sex : student.getSex());
-       student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
-       student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
-       student.setHeight(height != 0 ? height : student.getHeight());
-       return "Student information successfully edited!";
+        Student student = searchStudent(studentCode);
+        student.setName(name != null ? name : student.getName());
+        student.setLastName(lastName != null ? lastName : student.getLastName());
+        student.setAge(age != 0 ? age : student.getAge());
+        student.setSex(sex != 'N' ? sex : student.getSex());
+        student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
+        student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
+        student.setHeight(height != 0 ? height : student.getHeight());
+        return "Student information successfully edited!";
     }
 
     public String deleteStudent(String studentCode){

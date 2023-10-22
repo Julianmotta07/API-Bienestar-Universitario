@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/tarea-integradora-2-2023-2-integradorai.iml" filepath="$PROJECT_DIR$/.idea/tarea-integradora-2-2023-2-integradorai.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IntegradoraII.iml" filepath="$PROJECT_DIR$/IntegradoraII.iml" />
     </modules>
   </component>
 </project>

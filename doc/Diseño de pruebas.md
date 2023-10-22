@@ -4,7 +4,7 @@ Diseño de pruebas
 Configuración de los Escenarios
 
 Nombre	     Clase	                Escenario
-setUpStage1	 Student	            Un objeto de la clase Student con name = "Lina", lastName = "Andrade", age = 19, weightS = 58, weightA =                                   56, height = 1,57 , IMCS = 23,5, IMCA = 22,7 ,  gender = "femenino"
+setUpStage1	 Student	            Un objeto de la clase Student con name = "Lina", lastName = "Andrade", age = 19, weightS = 58, weightA = 56, height = 1,57 , IMCS = 23,5, IMCA = 22,7 ,  sex = "f"
 setUpStage2  Student	            Un objeto de la clase Student con name = “Julian”, lastName = "Motta",age = 18, weightS = 60, weightA 
                                     = 60 height =  1,68 , IMCS = 21,3, IMCA = 21,3 gender = "masculino"
 

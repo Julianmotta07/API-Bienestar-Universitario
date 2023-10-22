@@ -2,31 +2,39 @@ package src.model;
 
 public class Student implements Comparable<Student> {
 
+    private String studentCode;
     private String name;
-
     private String lastName;
     private int age;
-
+    private char sex;
     private double weightS;
-
     private double weightA;
     private double height;
 
-    private double imcS;
+    private double bmiS;
 
-    private double imcA;
-    private String gender;
+    private double bmiA;
 
-    public Student(String name, String lastName, int age, double weightS, double weightA, double height, double imcS,double imcA, String gender) {
+
+    public Student(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height, double bmiS,double bmiA) {
+        this.studentCode = studentCode;
         this.name = name;
         this.lastName = lastName;
         this.age = age;
+        this.sex = sex;
         this.weightS = weightS;
-        this.height = height;
-        this.imcS = imcS;
-        this.imcA = imcA;
-        this.gender = gender;
         this.weightA = weightA;
+        this.height = height;
+        this.bmiS = bmiS;
+        this.bmiA = bmiA;
+    }
+
+    public String getStudentCode() {
+        return studentCode;
+    }
+
+    public void setStudentCode(String studentCode) {
+        this.studentCode = studentCode;
     }
 
     public String getName() {
@@ -53,6 +61,14 @@ public class Student implements Comparable<Student> {
         this.age = age;
     }
 
+    public char getSex() {
+        return sex;
+    }
+
+    public void setSex(char sex) {
+        this.sex = sex;
+    }
+
     public double getWeightS() {
         return weightS;
     }
@@ -68,6 +84,7 @@ public class Student implements Comparable<Student> {
     public void setWeightA(double weightA) {
         this.weightA = weightA;
     }
+
     public double getHeight() {
         return height;
     }
@@ -76,44 +93,37 @@ public class Student implements Comparable<Student> {
         this.height = height;
     }
 
-    public double getImcS() {
-        return imcS;
+    public double getBmiS() {
+        return bmiS;
     }
 
-    public void setImcS(double imcS) {
-        this.imcS = imcS;
+    public void setBmiS(double bmiS) {
+        this.bmiS = bmiS;
     }
 
-    public double getImcA() {
-        return imcA;
+    public double getBmiA() {
+        return bmiA;
     }
 
-    public void setImcA(double imcA) {
-        this.imcA = imcA;
-    }
-
-    public String getGender() {
-        return gender;
-    }
-
-    public void setGender(String gender) {
-        this.gender = gender;
+    public void setBmiA(double bmiA) {
+        this.bmiA = bmiA;
     }
 
     @Override
     public String toString() {
         return "Student{" +
-                "name='" + name + '\'' +
+                "studentCode='" + studentCode + '\'' +
+                ", name='" + name + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", age=" + age +
+                ", sex=" + sex +
                 ", weightS=" + weightS +
                 ", weightA=" + weightA +
                 ", height=" + height +
-                ", imcS=" + imcS +
-                ", gender='" + gender + '\'' +
+                ", bmiS=" + bmiS +
+                ", bmiA=" + bmiA +
                 '}';
     }
-
 
     @Override
     public int compareTo(Student o) {

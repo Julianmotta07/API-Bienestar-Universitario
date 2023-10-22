@@ -1,6 +1,8 @@
 package src.ui;
 
 import src.Exceptions.InvalidAgeException;
+import src.Exceptions.InvalidHeightException;
+import src.Exceptions.InvalidWeightException;
 import src.model.BienestarController;
 
 import java.util.Scanner;
@@ -66,7 +68,9 @@ public class Main {
                     sc.nextLine();
                     break;
                 case 7:
-                    break;
+                    print();
+                    System.out.println("Press Enter to return to the menu...");
+                    sc.nextLine();
                 default:
                     System.out.println("Invalid option, try again!");
                     sc.nextLine();
@@ -92,19 +96,50 @@ public class Main {
                 flag = true;
             } catch (InvalidAgeException e) {
                 System.out.println("Error: "+ e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: "+ e.getMessage());
+                System.out.println("Enter numbers, not text.");
             }
         }
-        System.out.println("Enter height (in meters):");
-        double height = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Enter weight of september:");
-        double weightS = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Enter weight of april:");
-        double weightA = sc.nextInt();
+        flag = false;
+        double height = 0;
+        while(!flag){
+            System.out.println("Enter the height (in meters):");
+            String s2 = sc.nextLine();
+            try{
+                height = Double.parseDouble(s2);
+                controller.validateHeight(height);
+                flag = true;
+            } catch (InvalidHeightException e) {
+                System.out.println("Error: "+ e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: "+ e.getMessage());
+                System.out.println("Enter numbers, not text.");
+            }
+        }
+        flag = false;
+        double weightS = 0;
+        double weightA = 0;
+        while(!flag){
+            System.out.println("Enter weight of september (in kg):");
+            String s3 = sc.nextLine();
+            System.out.println("Enter weight of april (in kg):");
+            String s4 = sc.nextLine();
+            try{
+                weightS = Double.parseDouble(s3);
+                weightA = Double.parseDouble(s4);
+                controller.validateWeight(weightS);
+                controller.validateWeight(weightA);
+                flag = true;
+            } catch (InvalidWeightException e) {
+                System.out.println("Error: "+ e.getMessage());
+            } catch (NumberFormatException e) {
+                System.out.println("Error: "+ e.getMessage());
+                System.out.println("Enter numbers, not text.");
+            }
+        }
         String msg = controller.addStudent(name, lastname, studentCode, age, height, weightS, weightA);
         System.out.println(msg);
-
     }
 
     public void editStudent(){
@@ -125,6 +160,10 @@ public class Main {
 
     public void exportModel(){
 
+    }
+
+    public void print(){
+        controller.print();
     }
 
 }

@@ -1,12 +1,7 @@
 package src.model;
 
-import src.Exceptions.InvalidAgeException;
-import src.Exceptions.InvalidHeightException;
-import src.Exceptions.InvalidWeightException;
-
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import src.Exceptions.*;
+import java.io.*;
 import java.util.ArrayList;
 
 public class BienestarController {
@@ -21,12 +16,16 @@ public class BienestarController {
         loadDataBase();
     }
 
-    public ArrayList<Student> getStudents() {
-        return students;
-    }
-
-    public String addStudent(String name,String lastname, String studentCode, int age,  double height, double weightS, double weightA){
-        return "ADDED";
+    public String addStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
+        String msg = "Error: A student with the entered ID already exists.";
+        if (searchStudent(studentCode) == null){
+            double bmiS = weightS / (height * height);
+            double bmiA = weightA / (height * height);
+            Student student = new Student(studentCode, name, lastName, age, sex, weightS, weightA, height, bmiS, bmiA);
+            students.add(student);
+            msg = "Student successfully registered!.";
+        }
+        return msg;
     }
 
     public void print(){
@@ -65,21 +64,43 @@ public class BienestarController {
         }
     }
 
-    public void validateAge(int age) throws InvalidAgeException {
+    public void validateID(String studentCode) throws IDException {
+        if (studentCode.length() != 9) {
+            throw new IDException("The code must be 9 characters.");
+        } else if (studentCode.charAt(0) != 'A'){
+            throw new IDException("The code must begin with A.");
+        }
+    }
+
+    public void validateAge(int age) throws AgeException {
         if (age < 0 || age > 100) {
-            throw new InvalidAgeException("Invalid age range");
+            throw new AgeException("Invalid age range.");
         }
     }
 
-    public void validateHeight(double height) throws InvalidHeightException {
+    public void validateHeight(double height) throws HeightException {
         if (height < 0) {
-            throw new InvalidHeightException("Invalid height range");
+            throw new HeightException("Invalid height range.");
         }
     }
 
-    public void validateWeight(double weight) throws InvalidWeightException {
+    public void validateWeight(double weight) throws WeightException {
         if (weight < 0) {
-            throw new InvalidWeightException("Invalid weight range");
+            throw new WeightException("Invalid weight range.");
         }
     }
+
+    private Student searchStudent(String studentCode){
+        Student userFound = null;
+        boolean found = false;
+        for (int i = 0; i < students.size() && !found; i++) {
+            Student user = students.get(i);
+            if (user.getStudentCode().equals(studentCode)){
+                userFound = user;
+                found = true;
+            }
+        }
+        return userFound;
+    }
+
 }

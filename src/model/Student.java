@@ -10,9 +10,7 @@ public class Student implements Comparable<Student> {
     private double weightS;
     private double weightA;
     private double height;
-
     private double bmiS;
-
     private double bmiA;
 
 

@@ -1,15 +1,23 @@
 package model;
 
 import Exceptions.*;
+import com.google.gson.Gson;
+
 import java.io.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class BienestarController {
 
-    static String folder = "data";
-    static String path = "data/data.txt";
 
     ArrayList<Student> students;
+
+    public static int decimalPlaces = 2;
+
+    Gson gson;
 
     public BienestarController() {
         students = new ArrayList<>();
@@ -19,8 +27,19 @@ public class BienestarController {
     public String addStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
         String msg = "Error: A student with the entered ID already exists.";
         if (searchStudent(studentCode) == null){
-            double bmiS = weightS / (height * height);
-            double bmiA = weightA / (height * height);
+
+            double bmiSep = weightS / (height * height);
+            double bmiApr = weightA / (height * height);
+
+            BigDecimal decimals = new BigDecimal(bmiSep);
+            decimals= decimals.setScale(decimalPlaces, RoundingMode.HALF_UP);
+
+            BigDecimal decimalsA = new BigDecimal(bmiApr);
+            decimalsA= decimalsA.setScale(decimalPlaces, RoundingMode.HALF_UP);
+
+            double bmiS = decimals.doubleValue();
+            double bmiA = decimalsA.doubleValue();
+
             Student student = new Student(studentCode, name, lastName, age, sex, weightS, weightA, height, bmiS, bmiA);
             students.add(student);
             msg = "Student successfully registered!.";
@@ -30,14 +49,18 @@ public class BienestarController {
 
     public String editStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
         Student student = searchStudent(studentCode);
-        student.setName(name != null ? name : student.getName());
-        student.setLastName(lastName != null ? lastName : student.getLastName());
-        student.setAge(age != 0 ? age : student.getAge());
-        student.setSex(sex != 'N' ? sex : student.getSex());
-        student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
-        student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
-        student.setHeight(height != 0 ? height : student.getHeight());
-        return "Student information successfully edited!";
+        if(student != null) {
+            student.setName(name != null ? name : student.getName());
+            student.setLastName(lastName != null ? lastName : student.getLastName());
+            student.setAge(age != 0 ? age : student.getAge());
+            student.setSex(sex != 'N' ? sex : student.getSex());
+            student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
+            student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
+            student.setHeight(height != 0 ? height : student.getHeight());
+            return "Student information successfully edited!";
+        }else {
+            return "The student is not registered in the system\nEnter an existing student in the system and try again.";
+        }
     }
 
     public String deleteStudent(String studentCode){
@@ -135,4 +158,50 @@ public class BienestarController {
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }
+
+    public void writeGsonStudents(){
+
+        String json = gson.toJson(students);
+
+        try{
+            FileOutputStream fos = new FileOutputStream(("data/studentList.json"));
+            fos.write(json.getBytes(StandardCharsets.UTF_8));
+            fos.close();
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void readGsonStudent(){
+
+        File file = new File("studentList.json");
+
+        if (file.exists()){
+
+            try {
+                FileInputStream fis = new FileInputStream(file);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
+
+                String json = "";
+                String line;
+
+                if ((line = reader.readLine())!=null){
+                    json = line;
+                }
+
+                fis.close();
+
+                Student [] student = gson.fromJson(json, Student[].class);
+
+                students.addAll(Arrays.asList(student));
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
 }
+

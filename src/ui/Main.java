@@ -145,16 +145,26 @@ public class Main {
         }
         flag = false;
         double weightS = 0;
-        double weightA = 0;
         while(!flag){
             System.out.println("Enter weight of september (in kg):");
-            String input1 = sc.nextLine();
-            System.out.println("Enter weight of april (in kg):");
-            String input2 = sc.nextLine();
+            String input = sc.nextLine();
             try{
-                weightS = Double.parseDouble(input1);
-                weightA = Double.parseDouble(input2);
-                controller.validateWeight(weightS);
+                weightS = Double.parseDouble(input);
+                controller.validateWeight(weightS);;
+                flag = true;
+            } catch (WeightException e) {
+                System.out.println("Error: " + e.getMessage() + "\n");
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Enter numbers, not text.\n");
+            }
+        }
+        flag = false;
+        double weightA = 0;
+        while(!flag){
+            System.out.println("Enter weight of april (in kg):");
+            String input = sc.nextLine();
+            try{
+                weightA = Double.parseDouble(input);
                 controller.validateWeight(weightA);
                 flag = true;
             } catch (WeightException e) {
@@ -168,11 +178,130 @@ public class Main {
     }
 
     public void editStudent(){
-
+        String list = controller.showStudentList();
+        System.out.println(list);
+        System.out.println("Enter student code:");
+        String studentCode = sc.nextLine();
+        if (controller.searchStudent(studentCode) == null){
+            System.out.println("Error: A student with the entered ID does not exist.");
+        } else {
+            String name = null, lastName = null;
+            double weightS = 0, weightA = 0, height = 0;
+            char sex = 'N';
+            int age = 0;
+            System.out.println("Write the letters of the items to change:");
+            System.out.println(" a. Name\n b. Last name\n c. Age\n d. Sex\n e. September weight\n f. April weight\n g. Height");
+            String[] input = sc.nextLine().split(" ");
+            for (String s : input) {
+                char letter = s.charAt(0);
+                boolean flag = false;
+                switch (letter) {
+                    case 'a' -> {
+                        System.out.println("Enter the new name:");
+                        name = sc.nextLine();
+                    }
+                    case 'b' -> {
+                        System.out.println("Enter the new last name:");
+                        lastName = sc.nextLine();
+                    }
+                    case 'c' -> {
+                        while (!flag) {
+                            System.out.println("Enter the new age:");
+                            String inp = sc.nextLine();
+                            try {
+                                age = Integer.parseInt(inp);
+                                controller.validateAge(age);
+                                flag = true;
+                            } catch (AgeException e) {
+                                System.out.println("Error: " + e.getMessage() + "\n");
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: Enter numbers, not text.\n");
+                            }
+                        }
+                    }
+                    case 'd' -> {
+                        while (!flag) {
+                            System.out.println("Select new sex: \n 1: Male \n 2: Female");
+                            String inp = sc.nextLine();
+                            try {
+                                int sexOpt = Integer.parseInt(inp);
+                                if (sexOpt == 1) {
+                                    sex = 'M';
+                                    flag = true;
+                                } else if (sexOpt == 2){
+                                    sex = 'F';
+                                    flag = true;
+                                } else {
+                                    System.out.println("Error: Enter 1 or 2.\n");
+                                }
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: Enter numbers, not text.\n");
+                            }
+                        }
+                    }
+                    case 'e' -> {
+                        while (!flag) {
+                            System.out.println("Enter the new weight of september (in kg):");
+                            String inp = sc.nextLine();
+                            try {
+                                weightS = Double.parseDouble(inp);
+                                controller.validateWeight(weightS);
+                                flag = true;
+                            } catch (WeightException e) {
+                                System.out.println("Error: " + e.getMessage() + "\n");
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: Enter numbers, not text.\n");
+                            }
+                        }
+                    }
+                    case 'f' -> {
+                        while (!flag) {
+                            System.out.println("Enter the new weight of april (in kg):");
+                            String inp = sc.nextLine();
+                            try {
+                                weightA = Double.parseDouble(inp);
+                                controller.validateWeight(weightA);
+                                flag = true;
+                            } catch (WeightException e) {
+                                System.out.println("Error: " + e.getMessage() + "\n");
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: Enter numbers, not text.\n");
+                            }
+                        }
+                    }
+                    case 'g' -> {
+                        while (!flag) {
+                            System.out.println("Enter the new height (in meters):");
+                            String inp = sc.nextLine();
+                            try {
+                                height = Double.parseDouble(inp);
+                                controller.validateHeight(height);
+                                flag = true;
+                            } catch (HeightException e) {
+                                System.out.println("Error: " + e.getMessage() + "\n");
+                            } catch (NumberFormatException e) {
+                                System.out.println("Error: Enter numbers, not text.\n");
+                            }
+                        }
+                    }
+                }
+            }
+            String msg = controller.editStudent(studentCode, name, lastName, age, sex, weightS, weightA, height);
+            System.out.println(msg);
+        }
     }
 
     public void deleteStudent(){
-
+        String list = controller.showStudentList();
+        System.out.println(list);
+        System.out.println("Enter student code:");
+        String studentCode = sc.nextLine();
+        if (controller.searchStudent(studentCode) == null){
+            System.out.println("Error: A student with the entered ID does not exist.");
+        } else {
+            String msg = controller.deleteStudent(studentCode);
+            System.out.println(msg);
+        }
     }
 
     public void classificationReport(){

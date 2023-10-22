@@ -28,6 +28,23 @@ public class BienestarController {
         return msg;
     }
 
+    public String editStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
+       Student student = searchStudent(studentCode);
+       student.setName(name != null ? name : student.getName());
+       student.setLastName(lastName != null ? lastName : student.getLastName());
+       student.setAge(age != 0 ? age : student.getAge());
+       student.setSex(sex != 'N' ? sex : student.getSex());
+       student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
+       student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
+       student.setHeight(height != 0 ? height : student.getHeight());
+       return "Student information successfully edited!";
+    }
+
+    public String deleteStudent(String studentCode){
+        students.remove(searchStudent(studentCode));
+        return "Student successfully removed!";
+    }
+
     public void print(){
         for (Student student: students) {
             System.out.println(student.toString());
@@ -90,7 +107,15 @@ public class BienestarController {
         }
     }
 
-    private Student searchStudent(String studentCode){
+    public String showStudentList(){
+        StringBuilder list = new StringBuilder("Students list:\n");
+        for (Student student : students){
+            list.append(student.getStudentCode()).append(": ").append(student.getName()).append(" ").append(student.getLastName()).append("\n");
+        }
+        return list.toString();
+    }
+
+    public Student searchStudent(String studentCode){
         Student userFound = null;
         boolean found = false;
         for (int i = 0; i < students.size() && !found; i++) {

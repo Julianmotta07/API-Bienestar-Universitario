@@ -12,11 +12,8 @@ import java.util.Arrays;
 
 public class BienestarController {
 
-
     ArrayList<Student> students;
-
     public static int decimalPlaces = 2;
-
     Gson gson;
 
     public BienestarController() {
@@ -27,19 +24,12 @@ public class BienestarController {
     public String addStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
         String msg = "Error: A student with the entered ID already exists.";
         if (searchStudent(studentCode) == null){
-
-            double bmiSep = weightS / (height * height);
-            double bmiApr = weightA / (height * height);
-
-            BigDecimal decimals = new BigDecimal(bmiSep);
-            decimals= decimals.setScale(decimalPlaces, RoundingMode.HALF_UP);
-
-            BigDecimal decimalsA = new BigDecimal(bmiApr);
-            decimalsA= decimalsA.setScale(decimalPlaces, RoundingMode.HALF_UP);
-
-            double bmiS = decimals.doubleValue();
+            BigDecimal decimalS = new BigDecimal(weightS / (height * height));
+            decimalS = decimalS.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            double bmiS = decimalS.doubleValue();
+            BigDecimal decimalsA = new BigDecimal(weightA / (height * height));
+            decimalsA = decimalsA.setScale(decimalPlaces, RoundingMode.HALF_UP);
             double bmiA = decimalsA.doubleValue();
-
             Student student = new Student(studentCode, name, lastName, age, sex, weightS, weightA, height, bmiS, bmiA);
             students.add(student);
             msg = "Student successfully registered!.";
@@ -48,22 +38,33 @@ public class BienestarController {
     }
 
     public String editStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
-
-            Student student = searchStudent(studentCode);
-
-            student.setName(name != null ? name : student.getName());
-            student.setLastName(lastName != null ? lastName : student.getLastName());
-            student.setAge(age != 0 ? age : student.getAge());
-            student.setSex(sex != 'N' ? sex : student.getSex());
-            student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
-            student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
-            student.setHeight(height != 0 ? height : student.getHeight());
-            return "Student information successfully edited!";
-
+        Student student = searchStudent(studentCode);
+        student.setName(name != null ? name : student.getName());
+        student.setLastName(lastName != null ? lastName : student.getLastName());
+        student.setAge(age != 0 ? age : student.getAge());
+        student.setSex(sex != 'N' ? sex : student.getSex());
+        student.setWeightS(weightS != 0 ? weightS : student.getWeightS());
+        student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
+        student.setHeight(height != 0 ? height : student.getHeight());
+        if (weightS != 0 || weightA != 0 || height != 0){
+            double h = student.getHeight();
+            BigDecimal decimalS = new BigDecimal(student.getWeightS() / (h * h));
+            decimalS = decimalS.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            student.setBmiS(decimalS.doubleValue());
+            BigDecimal decimalA = new BigDecimal(student.getWeightA() / (h * h));
+            decimalA = decimalA.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            student.setBmiA(decimalA.doubleValue());
+        }
+        return "Student information successfully edited!";
     }
 
     public String deleteStudent(String studentCode){
-        students.remove(searchStudent(studentCode));
+        Student student = searchStudent(studentCode);
+        if (student != null){
+            students.remove(student);
+        } else {
+            return "Error: A student with the entered ID does not exist.";
+        }
         return "Student successfully removed!";
     }
 
@@ -131,37 +132,35 @@ public class BienestarController {
 
     public String showStudentList(){
         StringBuilder list = new StringBuilder("Students list:\n");
-        for (Student student : students){
-            list.append(student.getStudentCode()).append(": ").append(student.getName()).append(" ").append(student.getLastName()).append("\n");
+        for (int i = 0; i < students.size(); i++){
+            Student student = students.get(i);
+            list.append(i+1).append(". ").append(student.getStudentCode()).append(": ").append(student.getName()).append(" ").append(student.getLastName()).append("\n");
         }
         return list.toString();
     }
 
     public Student searchStudent(String studentCode){
-        Student userFound = null;
+        Student studentFound = null;
         boolean found = false;
         for (int i = 0; i < students.size() && !found; i++) {
-            Student user = students.get(i);
-            if (user.getStudentCode().equals(studentCode)){
-                userFound = user;
+            Student student = students.get(i);
+            if (student.getStudentCode().equals(studentCode)){
+                studentFound = student;
                 found = true;
             }
         }
-        return userFound;
+        return studentFound;
     }
 
     public ArrayList<Student> getStudents() {
         return students;
     }
-
     public void setStudents(ArrayList<Student> students) {
         this.students = students;
     }
 
     public void writeGsonStudents(){
-
         String json = gson.toJson(students);
-
         try{
             FileOutputStream fos = new FileOutputStream(("data/studentList.json"));
             fos.write(json.getBytes(StandardCharsets.UTF_8));
@@ -172,35 +171,22 @@ public class BienestarController {
     }
 
     public void readGsonStudent(){
-
         File file = new File("studentList.json");
-
         if (file.exists()){
-
             try {
                 FileInputStream fis = new FileInputStream(file);
-
                 BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-
                 String json = "";
                 String line;
-
                 if ((line = reader.readLine())!=null){
                     json = line;
                 }
-
                 fis.close();
-
                 Student [] student = gson.fromJson(json, Student[].class);
-
                 students.addAll(Arrays.asList(student));
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-
         }
     }
 }
-

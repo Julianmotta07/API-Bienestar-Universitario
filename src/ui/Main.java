@@ -2,7 +2,6 @@ package ui;
 
 import Exceptions.*;
 import model.BienestarController;
-
 import java.util.Scanner;
 
 public class Main {
@@ -42,12 +41,10 @@ public class Main {
                     sc.nextLine();
                     break;
                 case 2:
-
                     editStudent();
                     System.out.println("Press Enter to return to the menu...");
                     sc.nextLine();
                     break;
-
                 case 3:
                     deleteStudent();
                     System.out.println("Press Enter to return to the menu...");
@@ -152,7 +149,7 @@ public class Main {
             String input = sc.nextLine();
             try{
                 weightS = Double.parseDouble(input);
-                controller.validateWeight(weightS);
+                controller.validateWeight(weightS);;
                 flag = true;
             } catch (WeightException e) {
                 System.out.println("Error: " + e.getMessage() + "\n");
@@ -179,7 +176,7 @@ public class Main {
         System.out.println(msg);
     }
 
-    public void editStudent() {
+    public void editStudent(){
         String list = controller.showStudentList();
         System.out.println(list);
         System.out.println("Enter student code:");
@@ -298,12 +295,8 @@ public class Main {
         System.out.println(list);
         System.out.println("Enter student code:");
         String studentCode = sc.nextLine();
-        if (controller.searchStudent(studentCode) == null){
-            System.out.println("Error: A student with the entered ID does not exist.");
-        } else {
-            String msg = controller.deleteStudent(studentCode);
-            System.out.println(msg);
-        }
+        String msg = controller.deleteStudent(studentCode);
+        System.out.println(msg);
     }
 
     public void classificationReport(){

@@ -6,3 +6,9 @@
 Students:
 - Lina Andrade
 - Deiner Julián Motta
+
+Quality indicators: 
+
+Error-failure density = 0.2
+Reliability = 0.8
+Completeness = 0.83

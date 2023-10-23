@@ -48,8 +48,9 @@ public class BienestarController {
     }
 
     public String editStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
-        Student student = searchStudent(studentCode);
-        if(student != null) {
+
+            Student student = searchStudent(studentCode);
+
             student.setName(name != null ? name : student.getName());
             student.setLastName(lastName != null ? lastName : student.getLastName());
             student.setAge(age != 0 ? age : student.getAge());
@@ -58,9 +59,7 @@ public class BienestarController {
             student.setWeightA(weightA != 0 ? weightA : student.getWeightA());
             student.setHeight(height != 0 ? height : student.getHeight());
             return "Student information successfully edited!";
-        }else {
-            return "The student is not registered in the system\nEnter an existing student in the system and try again.";
-        }
+
     }
 
     public String deleteStudent(String studentCode){

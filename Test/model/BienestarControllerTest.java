@@ -1,6 +1,9 @@
 package model;
 
 import Exceptions.AgeException;
+import Exceptions.HeightException;
+import Exceptions.IDException;
+import Exceptions.WeightException;
 import junit.framework.TestCase;
 
 public class BienestarControllerTest extends TestCase {
@@ -51,11 +54,38 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-    public void testAddStudentsWithFailes() throws AgeException {
+    public void testExceptions() {
 
-        setUpScenario1();
+        try {
 
+            setUpScenario1();
 
+            controller.addStudent("A00345674", "Vanesa","Jaramillo",-3,'F', 62,66,-1.70);
+            controller.addStudent("B00345674", "Miranda","Montes",23,'F', -52,66,1.70);
+
+            controller.validateAge(controller.students.get(34).getAge());
+            controller.validateHeight(controller.students.get(34).getHeight());
+
+            controller.validateWeight(controller.getStudents().get(35).getWeightS());
+            controller.validateID(controller.getStudents().get(35).getStudentCode());
+
+            } catch (AgeException e) {
+
+                assertEquals("Invalid age range.",e.getMessage());
+
+            } catch (IDException e) {
+
+                assertEquals("The code must begin with A.", e.getMessage());
+
+            } catch (HeightException e) {
+
+                assertEquals("Invalid height range.", e.getMessage());
+
+            } catch (WeightException e){
+
+                assertEquals("Invalid weight range.", e.getMessage());
+
+            }
 
 
     }
@@ -66,12 +96,30 @@ public class BienestarControllerTest extends TestCase {
 
       String editStudent = controller.editStudent("A00369076", "Juan", "Toledo", 23, 'M', 80, 78, 1.87);
 
-      String editStudent2 = controller.editStudent("A00467589", "Juan", "Toledo", 23, 'M', 80, 78, 1.87);
+      assertNull(controller.searchStudent("A00467589"));
+
+      assertEquals("Juan",controller.getStudents().get(34).getName());
+
+      assertNotSame(1.83,controller.getStudents().get(34).getHeight());
 
       assertEquals("Student information successfully edited!",editStudent);
-      assertEquals("The student is not registered in the system\nEnter an existing student in the system and try again.",editStudent2);
+
+      assertEquals(22.88,controller.getStudents().get(34).getBmiS());
 
     }
 
 
+    public void testDeleteStudent() {
+
+        setUpScenario2();
+
+        controller.deleteStudent("A00370234");
+
+        assertEquals(38,controller.getStudents().size());
+
+        assertNull(controller.searchStudent("A00370234"));
+
+        assertNotSame("Juliana",controller.getStudents().get(35).getName());
+
+    }
 }

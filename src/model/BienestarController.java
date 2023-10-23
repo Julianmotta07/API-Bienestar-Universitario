@@ -68,6 +68,94 @@ public class BienestarController {
         return "Student successfully removed!";
     }
 
+    public String classificationReport() {
+
+        StringBuilder text = new StringBuilder("Indicators:\n\n -Category A: low weight\n -Category B: normal weight\n -Category C: overweight\n -Category D: obesity\n -Category E: morbid obesity\n");
+        text.append("\n============================\n");
+        text.append("   SEPTEMBER 2022 REPORT        ");
+        text.append("\n============================\n");
+
+        int[] categoryCounts = new int[5];
+
+        for (Student student: students) {
+            double bmiS = student.getBmiS();
+            if (bmiS < 18.50){
+                categoryCounts[0]++;
+            } else if (bmiS < 24.99){
+                categoryCounts[1]++;
+            } else if (bmiS < 29.99){
+                categoryCounts[2]++;
+            } else if (bmiS < 39.99){
+                categoryCounts[3]++;
+            } else {
+                categoryCounts[4]++;
+            }
+        }
+
+        String[] category = {"A", "B", "C", "D", "E"};
+
+        text.append("\nDistribution:\n");
+        for (int i = 0; i < categoryCounts.length; i++) {
+            text.append(category[i]).append(": ").append(categoryCounts[i]).append(" students\n");
+        }
+
+        text.append("\nHistogram:\n");
+        for (int i = 0; i < categoryCounts.length; i++) {
+            text.append(category[i]).append(" ").append(generateHistogram(categoryCounts[i])).append("\n");
+        }
+
+        Arrays.fill(categoryCounts, 0);
+
+        text.append("\n============================\n");
+        text.append("      APRIL 2022 REPORT         ");
+        text.append("\n============================\n");
+
+        for (Student student: students) {
+            double bmiA = student.getBmiA();
+            if (bmiA < 18.50){
+                categoryCounts[0]++;
+            } else if (bmiA < 24.99){
+                categoryCounts[1]++;
+            } else if (bmiA < 29.99){
+                categoryCounts[2]++;
+            } else if (bmiA < 39.99){
+                categoryCounts[3]++;
+            } else {
+                categoryCounts[4]++;
+            }
+        }
+
+        text.append("\nDistribution:\n");
+        for (int i = 0; i < categoryCounts.length; i++) {
+            text.append(category[i]).append(": ").append(categoryCounts[i]).append(" students\n");
+        }
+
+        text.append("\nHistogram:\n");
+        for (int i = 0; i < categoryCounts.length; i++) {
+            text.append(category[i]).append(" ").append(generateHistogram(categoryCounts[i])).append("\n");
+        }
+
+        File file = new File("data/Classification report.txt");
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] bytes = text.toString().getBytes(StandardCharsets.UTF_8);
+            fos.write(bytes);
+            fos.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+
+        return "Report generated!";
+    }
+
+    private String generateHistogram(int count) {
+        StringBuilder bar = new StringBuilder();
+        for (int i = 0; i < count; i++) {
+            bar.append("+");
+        }
+        return bar.toString();
+    }
+
     public void print(){
         for (Student student: students) {
             System.out.println(student.toString());

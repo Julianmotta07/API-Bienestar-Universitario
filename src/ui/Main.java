@@ -300,7 +300,8 @@ public class Main {
     }
 
     public void classificationReport(){
-
+        String msg = controller.classificationReport();
+        System.out.println(msg);
     }
 
     public void nutritionalReport(){

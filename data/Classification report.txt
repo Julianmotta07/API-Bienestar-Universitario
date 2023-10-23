@@ -1,0 +1,43 @@
+Indicators:
+
+ -Category A: low weight
+ -Category B: normal weight
+ -Category C: overweight
+ -Category D: obesity
+ -Category E: morbid obesity
+
+============================
+   SEPTEMBER 2022 REPORT        
+============================
+
+Distribution:
+A: 2 students
+B: 24 students
+C: 6 students
+D: 2 students
+E: 0 students
+
+Histogram:
+A ++
+B ++++++++++++++++++++++++
+C ++++++
+D ++
+E 
+
+============================
+      APRIL 2022 REPORT         
+============================
+
+Distribution:
+A: 3 students
+B: 23 students
+C: 8 students
+D: 0 students
+E: 0 students
+
+Histogram:
+A +++
+B +++++++++++++++++++++++
+C ++++++++
+D 
+E 

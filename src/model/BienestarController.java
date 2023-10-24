@@ -78,18 +78,8 @@ public class BienestarController {
         int[] categoryCounts = new int[5];
 
         for (Student student: students) {
-            double bmiS = student.getBmiS();
-            if (bmiS < 18.50){
-                categoryCounts[0]++;
-            } else if (bmiS < 24.99){
-                categoryCounts[1]++;
-            } else if (bmiS < 29.99){
-                categoryCounts[2]++;
-            } else if (bmiS < 39.99){
-                categoryCounts[3]++;
-            } else {
-                categoryCounts[4]++;
-            }
+            int bmiSCategory = getBmiCategory(student.getBmiS());
+            categoryCounts[bmiSCategory]++;
         }
 
         String[] category = {"A", "B", "C", "D", "E"};
@@ -107,22 +97,12 @@ public class BienestarController {
         Arrays.fill(categoryCounts, 0);
 
         text.append("\n============================\n");
-        text.append("      APRIL 2022 REPORT         ");
+        text.append("     APRIL 2022 REPORT          ");
         text.append("\n============================\n");
 
         for (Student student: students) {
-            double bmiA = student.getBmiA();
-            if (bmiA < 18.50){
-                categoryCounts[0]++;
-            } else if (bmiA < 24.99){
-                categoryCounts[1]++;
-            } else if (bmiA < 29.99){
-                categoryCounts[2]++;
-            } else if (bmiA < 39.99){
-                categoryCounts[3]++;
-            } else {
-                categoryCounts[4]++;
-            }
+            int bmiACategory = getBmiCategory(student.getBmiA());
+            categoryCounts[bmiACategory]++;
         }
 
         text.append("\nDistribution:\n");
@@ -135,17 +115,138 @@ public class BienestarController {
             text.append(category[i]).append(" ").append(generateHistogram(categoryCounts[i])).append("\n");
         }
 
-        File file = new File("data/Classification report.txt");
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            byte[] bytes = text.toString().getBytes(StandardCharsets.UTF_8);
-            fos.write(bytes);
-            fos.close();
-        } catch (IOException e) {
-            System.out.println(e);
+        return bytesToTxTReport("data/Classification_report.txt", text.toString());
+    }
+
+    public String nutritionalReport(int mode, int filter){
+
+        StringBuilder text = new StringBuilder();
+        text.append("====================================================================================\n");
+        text.append("                           CHANGES IN NUTRITIONAL STATUS                                ");
+        text.append("\n====================================================================================\n");
+
+        if (mode == 1) {
+            text.append(nutritionalReportIndicators());
+        } else {
+            text.append(nutritionalReportList(filter));
         }
 
-        return "Report generated!";
+        text.append("\n====================================================================================");
+
+        return bytesToTxTReport("data/Nutritional_report.txt", text.toString());
+    }
+
+    private String nutritionalReportIndicators(){
+        int[] goodChanges = new int[4], badChanges = new int[4];
+        for (Student student : students){
+            int bmiSepCategory = getBmiCategory(student.getBmiS());
+            int bmiAprCategory = getBmiCategory(student.getBmiA());
+            if (bmiSepCategory < bmiAprCategory){
+                if (bmiSepCategory == 0 && bmiAprCategory == 1){
+                    goodChanges[0]++; // low weight to normal weight
+                }
+                if (bmiSepCategory == 1 && (bmiAprCategory == 2 || bmiAprCategory == 3)){
+                    badChanges[1]++; // normal weight to overweight or obesity
+                }
+                if (bmiSepCategory == 2 && (bmiAprCategory == 3 || bmiAprCategory == 4 )){
+                    badChanges[2]++; // overweight to obesity or morbid obesity
+                }
+                if (bmiSepCategory == 3 && bmiAprCategory == 4){
+                    badChanges[3]++; // obesity to morbid obesity
+                }
+            } else {
+                if (bmiSepCategory == 2 && bmiAprCategory == 1){
+                    goodChanges[1]++; // overweight to normal weight
+                }
+                if (bmiSepCategory == 3 && (bmiAprCategory == 2 || bmiAprCategory == 1)){
+                    goodChanges[2]++; // obesity to overweight or normal weight
+                }
+                if (bmiSepCategory == 4 && (bmiAprCategory == 2 || bmiAprCategory == 1)){
+                    goodChanges[3]++; // morbid weight to overweight or normal weight
+                }
+                if (bmiSepCategory == 1 && bmiAprCategory == 0){
+                    badChanges[0]++; // normal weight to low weight
+                }
+            }
+        }
+
+        int goodChangesCount = 0;
+        for (int goodChange : goodChanges) {
+            goodChangesCount += goodChange;
+        }
+
+        int badChangesCount = 0;
+        for (int badChange : badChanges){
+            badChangesCount += badChange;
+        }
+
+        int changesCount = goodChangesCount + badChangesCount;
+
+        return "\n" + changesCount + " students had change in their nutritional status.\n" +
+                "\n" + goodChangesCount + " students presented a favorable change in their health, distributed as follows:\n" +
+                "\n" + goodChanges[0] + " changed from low weight to normal weight." +
+                "\n" + goodChanges[1] + " changed from overweight to normal weight." +
+                "\n" + goodChanges[2] + " changed from obesity to overweight or normal weight." +
+                "\n" + goodChanges[3] + " changed from morbid weight to overweight or normal weight.\n" +
+                "\n" + badChangesCount + " students presented an unfavorable change in their health, distributed as follows:\n" +
+                "\n" + badChanges[0] + " changed from normal weight to low weight." +
+                "\n" + badChanges[1] + " changed from normal weight to overweight or obesity." +
+                "\n" + badChanges[2] + " changed from overweight to obesity or morbid obesity." +
+                "\n" + badChanges[3] + " changed from obesity to morbid obesity.\n";
+    }
+
+    private String nutritionalReportList(int filter){
+
+        StringBuilder text = new StringBuilder("\nStudents sorted by ");
+        if (filter == 1){
+            text.append("BMI (april).");
+        } else if (filter == 2){
+            text.append("age.");
+        } else {
+            text.append("last name.");
+        }
+        text.append("\n");
+
+        ArrayList<Student> studentsFiltered = new ArrayList<>(students);
+        selectionSort(studentsFiltered, filter);
+        int changesCount = 0;
+        for (Student student : studentsFiltered){
+            int bmiSepCategory = getBmiCategory(student.getBmiS());
+            int bmiAprCategory = getBmiCategory(student.getBmiA());
+            if (bmiSepCategory != bmiAprCategory){
+                changesCount++;
+                text.append("\n-").append(student);
+            }
+        }
+
+        text.append("\nA total of ").append(changesCount).append(" students had change in their nutritional status.\n");
+
+        return text.toString();
+    }
+
+    private void selectionSort (ArrayList<Student> list, int filter){
+        for (int i = 1; i < list.size(); i++) {
+            Student temp = list.get(i);
+            int j;
+            for (j = i - 1; j >= 0 && temp.compareTo(list.get(j), filter) < 0; j--) {
+                list.set(j + 1, list.get(j));
+            }
+            list.set(j + 1, temp);
+        }
+    }
+
+    private int getBmiCategory(double bmi){
+        if (bmi < 18.50) {
+            return 0; // Category A
+        } else if (bmi < 24.99) {
+            return 1; // Category B
+        } else if (bmi < 29.99) {
+            return 2; // Category C
+        } else if (bmi < 39.99) {
+            return 3; // Category D
+        } else {
+            return 4; // Category E
+        }
     }
 
     private String generateHistogram(int count) {
@@ -154,6 +255,19 @@ public class BienestarController {
             bar.append("+");
         }
         return bar.toString();
+    }
+
+    private String bytesToTxTReport(String pathName, String text){
+        File file = new File(pathName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
+            fos.write(bytes);
+            fos.close();
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        return "Report generated!";
     }
 
     public void print(){

@@ -1,4 +1,4 @@
-"Code","Name","LastName","Age","Sex","Weight (Sep)","Weight (Apr)","Height","BMI (Sep)","BMI (Apr)"
+"Code,""Name"",""LastName"",""Age"",""Sex"",""Weight (Sep)"",""Weight (Apr)"",""Height"",""BMI (Sep)"",""BMI (Apr)"""
 A00380776,Maria,Garcia,20,F,97,86,1.72,32.79,29.07
 A00380779,Maria Carmen,Hernandez,19,F,72,59,1.62,27.43,22.48
 A00358767,Carmen,Martinez,23,F,74,69,1.58,29.64,27.64
@@ -15,7 +15,7 @@ A00342376,Manuel,Munera,24,M,67,66,1.74,22.13,21.8
 A00330978,Francisco,Jaramillo,25,M,56,55,1.77,17.87,17.56
 A00360243,David,Sierra,22,M,70,68,1.68,24.8,24.09
 A00360763,Juan,Ballesteros,21,M,61,60,1.68,21.61,21.26
-A00370864,JoseAntonio,Munoz,20,O,53,52,1.69,18.56,18.21
+A00370864,Jose Antonio,Munoz,20,O,53,52,1.69,18.56,18.21
 A00387543,Javier,Sinisterra,19,M,92,92,1.79,28.71,28.71
 A00390623,Jose Luis,Motta,18,M,57,58,1.7,19.72,20.07
 A00419704,Daniel,Arteaga,16,M,67,67,1.67,24.02,24.02

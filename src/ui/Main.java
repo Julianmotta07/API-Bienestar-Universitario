@@ -306,6 +306,43 @@ public class Main {
 
     public void nutritionalReport(){
 
+        boolean flag = false;
+        int mode = 0;
+        while (!flag) {
+            System.out.println("Select mode:\n 1. Indicators\n 2. List");
+            String inp = sc.nextLine();
+            try {
+                mode = Integer.parseInt(inp);
+                if (mode == 1 || mode == 2) {
+                    flag = true;
+                } else {
+                    System.out.println("Error: Enter 1 or 2.\n");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Enter numbers, not text.\n");
+            }
+        }
+
+        flag = false;
+        int filter = 0;
+        if (mode == 2){
+            while (!flag) {
+                System.out.println("Select filter:\n 1. BMI\n 2. Age\n 3. Last name");
+                String inp = sc.nextLine();
+                try {
+                    filter = Integer.parseInt(inp);
+                    if (filter == 1 || filter == 2 || filter == 3) {
+                        flag = true;
+                    } else {
+                        System.out.println("Error: Enter 1, 2 or 3.\n");
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("Error: Enter numbers, not text.\n");
+                }
+            }
+        }
+        String msg = controller.nutritionalReport(mode, filter);
+        System.out.println(msg);
     }
 
     public void exportModel(){

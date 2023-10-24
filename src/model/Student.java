@@ -1,6 +1,6 @@
 package model;
 
-public class Student implements Comparable<Student> {
+public class Student {
 
     private String studentCode;
     private String name;
@@ -109,23 +109,23 @@ public class Student implements Comparable<Student> {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "studentCode='" + studentCode + '\'' +
-                ", name='" + name + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", age=" + age +
-                ", sex=" + sex +
-                ", weightS=" + weightS +
-                ", weightA=" + weightA +
-                ", height=" + height +
-                ", bmiS=" + bmiS +
-                ", bmiA=" + bmiA +
-                '}';
+        return " Code: " + studentCode + "\n" +
+                "  Name: " + name + " " + lastName + "\n" +
+                "  Age: " + age + "\n" +
+                "  Sex: " + sex + "\n" +
+                "  height: " + height + "\n" +
+                "  Sep. Weight: " + weightS + "\n" +
+                "  Apr. weight: " + weightA + "\n" +
+                "  Sep. BMI: " + bmiS + "\n" +
+                "  Apr. BMI: " + bmiA + "\n";
     }
 
-    @Override
-    public int compareTo(Student o) {
-        return 0;
-    }
-
+    public int compareTo(Student o, int type) {
+        if (type == 1){
+            return Double.compare(this.bmiA, o.bmiA);
+        } else if (type == 2) {
+            return Integer.compare(this.age, o.age);
+        } else
+            return this.lastName.compareTo(o.lastName);
+        }
 }

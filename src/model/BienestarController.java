@@ -9,7 +9,6 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class BienestarController {
 
@@ -69,23 +68,46 @@ public class BienestarController {
         return "Student successfully removed!";
     }
 
-    public String classificationReport() {
+    public String classificationReport(int mode, int filter) {
 
-        StringBuilder text = new StringBuilder("Indicators:\n\n -Category A: low weight\n -Category B: normal weight\n -Category C: overweight\n -Category D: obesity\n -Category E: morbid obesity\n");
+        StringBuilder text = new StringBuilder("Variables:\n\n -Category A: low weight\n -Category B: normal weight\n -Category C: overweight\n -Category D: obesity\n -Category E: morbid obesity\n");
+
         text.append("\n============================\n");
         text.append("   SEPTEMBER 2022 REPORT        ");
         text.append("\n============================\n");
 
+        if (mode == 2){
+            text.append(classificationReportHistogram(1));
+        } else {
+            text.append(classificationReportList(1, filter));
+        }
+
+        text.append("\n============================\n");
+        text.append("     APRIL 2023 REPORT          ");
+        text.append("\n============================\n");
+
+        if (mode == 2){
+            text.append(classificationReportHistogram(2));
+        } else {
+            text.append(classificationReportList(2, filter));
+        }
+
+        return bytesToTxTReport("data/Classification_report.txt", text.toString());
+    }
+
+    private String classificationReportHistogram(int month){
+
         int[] categoryCounts = new int[5];
 
-        for (Student student: students) {
-            int bmiSCategory = getBmiCategory(student.getBmiS());
-            categoryCounts[bmiSCategory]++;
+        for (Student student : students) {
+            int bmiCategory = (month == 1) ? getBmiCategory(student.getBmiS()) : getBmiCategory(student.getBmiA());
+            categoryCounts[bmiCategory]++;
         }
 
         String[] category = {"A", "B", "C", "D", "E"};
 
-        text.append("\nDistribution:\n");
+        StringBuilder text = new StringBuilder("\nDistribution:\n");
+
         for (int i = 0; i < categoryCounts.length; i++) {
             text.append(category[i]).append(": ").append(categoryCounts[i]).append(" students\n");
         }
@@ -95,28 +117,38 @@ public class BienestarController {
             text.append(category[i]).append(" ").append(generateHistogram(categoryCounts[i])).append("\n");
         }
 
-        Arrays.fill(categoryCounts, 0);
+        return text.toString();
+    }
 
-        text.append("\n============================\n");
-        text.append("     APRIL 2022 REPORT          ");
-        text.append("\n============================\n");
+    private String classificationReportList(int month, int filter){
 
-        for (Student student: students) {
-            int bmiACategory = getBmiCategory(student.getBmiA());
-            categoryCounts[bmiACategory]++;
+        StringBuilder text = new StringBuilder("\nStudents sorted by ");
+        if (filter == 1){
+            text.append("BMI ").append(month == 1 ? "September" : "April");
+        } else if (filter == 2){
+            text.append("age");
+        } else {
+            text.append("last name");
+        }
+        text.append(":\n");
+
+        ArrayList<Student> studentsFiltered = new ArrayList<>(students);
+        selectionSort(studentsFiltered, filter == 1 ? ((month == 1) ? 4 : 1) : filter);
+
+        String[] category = {"\nA:", "\nB:", "\nC:", "\nD:", "\nE:"};
+
+        for (Student student : studentsFiltered){
+            int bmiCategory = (month == 1) ? getBmiCategory(student.getBmiS()) : getBmiCategory(student.getBmiA());
+            category[bmiCategory] += "\n-" + student;
         }
 
-        text.append("\nDistribution:\n");
-        for (int i = 0; i < categoryCounts.length; i++) {
-            text.append(category[i]).append(": ").append(categoryCounts[i]).append(" students\n");
+        for (String s : category) {
+            if (s.length() > 3){
+                text.append(s);
+            }
         }
 
-        text.append("\nHistogram:\n");
-        for (int i = 0; i < categoryCounts.length; i++) {
-            text.append(category[i]).append(" ").append(generateHistogram(categoryCounts[i])).append("\n");
-        }
-
-        return bytesToTxTReport("data/Classification_report.txt", text.toString());
+        return text.toString();
     }
 
     public String nutritionalReport(int mode, int filter){
@@ -127,9 +159,9 @@ public class BienestarController {
         text.append("\n====================================================================================\n");
 
         if (mode == 1) {
-            text.append(nutritionalReportIndicators());
-        } else {
             text.append(nutritionalReportList(filter));
+        } else {
+            text.append(nutritionalReportIndicators());
         }
 
         text.append("\n====================================================================================");
@@ -200,13 +232,13 @@ public class BienestarController {
 
         StringBuilder text = new StringBuilder("\nStudents sorted by ");
         if (filter == 1){
-            text.append("BMI (april).");
+            text.append("BMI (april)");
         } else if (filter == 2){
-            text.append("age.");
+            text.append("age");
         } else {
-            text.append("last name.");
+            text.append("last name");
         }
-        text.append("\n");
+        text.append(":\n");
 
         ArrayList<Student> studentsFiltered = new ArrayList<>(students);
         selectionSort(studentsFiltered, filter);
@@ -236,11 +268,12 @@ public class BienestarController {
         }
     }
 
+
     public int getBmiCategoryAux(double bmi){
-
         return  getBmiCategory(bmi);
-
     }
+
+
     private int getBmiCategory(double bmi){
         if (bmi < 18.50) {
             return 0; // Category A
@@ -256,18 +289,17 @@ public class BienestarController {
     }
 
     /*Método auxiliar usado para imprimir los resultados del método "getBmiCategoryAux"
-    Para un número determinado de estudiantes y no para todos los estudiantes registrados
-    Nota: Este método solo es usado para validar un test.
-    */
-    public  String printStudentInfoAndBmiCategories(List<Student> students, List<String> bmiCategories) {
+   Para un número determinado de estudiantes y no para todos los estudiantes registrados
+   Nota: Este método solo es usado para validar un test.
+   */
+    public  String printStudentInfoAndBmiCategories(ArrayList<Student> students, ArrayList<String> bmiCategories) {
 
         StringBuilder result = new StringBuilder();
 
         for (int i = 0; i < 5; i++) {
             String nombre = students.get(i).getName();
             String categoria = bmiCategories.get(i);
-            result.append("Estudiante ").append(i + 1).append(": ").append(nombre)
-                    .append(" - Categoría BMI Abril: ").append(categoria).append("\n");
+            result.append("Estudiante ").append(i + 1).append(": ").append(nombre).append(" - Categoría BMI Abril: ").append(categoria).append("\n");
         }
 
         return result.toString().trim();
@@ -276,17 +308,19 @@ public class BienestarController {
     public String generateHistogramAux (int count){
         return generateHistogram(count);
     }
+
     private String generateHistogram(int count) {
         StringBuilder bar = new StringBuilder();
-        bar.append("+".repeat(Math.max(0, count)));
+        for (int i = 0; i < count; i++) {
+            bar.append("+");
+        }
         return bar.toString();
     }
 
     public String bytesToTxTReportAux(String pathName, String text){
-
         return bytesToTxTReport(pathName,text);
-
     }
+
     private String bytesToTxTReport(String pathName, String text){
         File file = new File(pathName);
         try {

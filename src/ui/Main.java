@@ -22,16 +22,15 @@ public class Main {
     public void menu(){
         int choice;
         do {
-            System.out.println("--------------WELCOME TO THE MENU--------------");
-            System.out.println("1: Register student............................");
-            System.out.println("2: Edit student................................");
-            System.out.println("3: Delete student..............................");
-            System.out.println("4: Generate classification report..............");
-            System.out.println("5: Generate report of nutritional change states");
-            System.out.println("6: Export current state of the model...........");
-            System.out.println("7: Print (temporal)............................");
-            System.out.println("8: Exit........................................");
-            System.out.println("-----------------------------------------------");
+            System.out.println("---------WELCOME TO THE MENU--------");
+            System.out.println("1: Register student.................");
+            System.out.println("2: Edit student.....................");
+            System.out.println("3: Delete student...................");
+            System.out.println("4: Generate report..................");
+            System.out.println("5: Export current state of the model");
+            System.out.println("6: Print (temporal).................");
+            System.out.println("7: Exit.............................");
+            System.out.println("------------------------------------");
             choice = sc.nextInt();
             sc.nextLine();
             switch(choice){
@@ -51,32 +50,27 @@ public class Main {
                     sc.nextLine();
                     break;
                 case 4:
-                    classificationReport();
+                    generateReport();
                     System.out.println("Press Enter to return to the menu...");
                     sc.nextLine();
                     break;
                 case 5:
-                    nutritionalReport();
-                    System.out.println("Press Enter to return to the menu...");
-                    sc.nextLine();
-                    break;
-                case 6:
                     exportModel();
                     System.out.println("Press Enter to return to the menu...");
                     sc.nextLine();
                     break;
-                case 7:
+                case 6:
                     print();
                     System.out.println("Press Enter to return to the menu...");
                     sc.nextLine();
                     break;
-                case 8:
+                case 7:
                     break;
                 default:
                     System.out.println("Invalid option, try again!");
                     sc.nextLine();
             }
-        } while (choice != 8);
+        } while (choice != 7);
     }
 
     public void registerStudent(){
@@ -299,17 +293,33 @@ public class Main {
         System.out.println(msg);
     }
 
-    public void classificationReport(){
-        String msg = controller.classificationReport();
-        System.out.println(msg);
-    }
-
-    public void nutritionalReport(){
-
+    public void generateReport() {
         boolean flag = false;
-        int mode = 0;
+        int reportType = 0;
         while (!flag) {
-            System.out.println("Select mode:\n 1. Indicators\n 2. List");
+            System.out.println("Select report type:\n 1. Classification Report\n 2. Nutritional Report");
+            String inp = sc.nextLine();
+            try {
+                reportType = Integer.parseInt(inp);
+                if (reportType == 1 || reportType == 2) {
+                    flag = true;
+                } else {
+                    System.out.println("Error: Enter 1 or 2.\n");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("Error: Enter numbers, not text.\n");
+            }
+        }
+
+        int mode = 0;
+        flag = false;
+        while (!flag) {
+            System.out.print("Select mode:\n 1. List\n 2. ");
+            if (reportType == 1){
+                System.out.println("Histogram");
+            } else {
+                System.out.println("Indicators");
+            }
             String inp = sc.nextLine();
             try {
                 mode = Integer.parseInt(inp);
@@ -325,7 +335,7 @@ public class Main {
 
         flag = false;
         int filter = 0;
-        if (mode == 2){
+        if (mode == 1){
             while (!flag) {
                 System.out.println("Select filter:\n 1. BMI\n 2. Age\n 3. Last name");
                 String inp = sc.nextLine();
@@ -341,7 +351,8 @@ public class Main {
                 }
             }
         }
-        String msg = controller.nutritionalReport(mode, filter);
+
+        String msg = reportType == 1 ? controller.classificationReport(mode, filter) : controller.nutritionalReport(mode, filter);
         System.out.println(msg);
     }
 

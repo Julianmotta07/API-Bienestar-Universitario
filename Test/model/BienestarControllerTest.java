@@ -11,7 +11,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
 
 public class BienestarControllerTest extends TestCase {
 
@@ -146,7 +145,7 @@ public class BienestarControllerTest extends TestCase {
 
         setUpScenario1();
 
-        List<String> bmiCategories = new ArrayList<>();
+        ArrayList<String> bmiCategories = new ArrayList<>();
 
         for (int i = 0; i < 5; i++) {
 

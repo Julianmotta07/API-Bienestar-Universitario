@@ -9,6 +9,7 @@ import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class BienestarController {
 
@@ -48,10 +49,10 @@ public class BienestarController {
         student.setHeight(height != 0 ? height : student.getHeight());
         if (weightS != 0 || weightA != 0 || height != 0){
             double h = student.getHeight();
-            BigDecimal decimalS = new BigDecimal(student.getWeightS() / (h * h));
+            BigDecimal decimalS = BigDecimal.valueOf(student.getWeightS() / (h * h));
             decimalS = decimalS.setScale(decimalPlaces, RoundingMode.HALF_UP);
             student.setBmiS(decimalS.doubleValue());
-            BigDecimal decimalA = new BigDecimal(student.getWeightA() / (h * h));
+            BigDecimal decimalA = BigDecimal.valueOf(student.getWeightA() / (h * h));
             decimalA = decimalA.setScale(decimalPlaces, RoundingMode.HALF_UP);
             student.setBmiA(decimalA.doubleValue());
         }
@@ -235,6 +236,11 @@ public class BienestarController {
         }
     }
 
+    public int getBmiCategoryAux(double bmi){
+
+        return  getBmiCategory(bmi);
+
+    }
     private int getBmiCategory(double bmi){
         if (bmi < 18.50) {
             return 0; // Category A
@@ -249,14 +255,38 @@ public class BienestarController {
         }
     }
 
+    /*Método auxiliar usado para imprimir los resultados del método "getBmiCategoryAux"
+    Para un número determinado de estudiantes y no para todos los estudiantes registrados
+    Nota: Este método solo es usado para validar un test.
+    */
+    public  String printStudentInfoAndBmiCategories(List<Student> students, List<String> bmiCategories) {
+
+        StringBuilder result = new StringBuilder();
+
+        for (int i = 0; i < 5; i++) {
+            String nombre = students.get(i).getName();
+            String categoria = bmiCategories.get(i);
+            result.append("Estudiante ").append(i + 1).append(": ").append(nombre)
+                    .append(" - Categoría BMI Abril: ").append(categoria).append("\n");
+        }
+
+        return result.toString().trim();
+    }
+
+    public String generateHistogramAux (int count){
+        return generateHistogram(count);
+    }
     private String generateHistogram(int count) {
         StringBuilder bar = new StringBuilder();
-        for (int i = 0; i < count; i++) {
-            bar.append("+");
-        }
+        bar.append("+".repeat(Math.max(0, count)));
         return bar.toString();
     }
 
+    public String bytesToTxTReportAux(String pathName, String text){
+
+        return bytesToTxTReport(pathName,text);
+
+    }
     private String bytesToTxTReport(String pathName, String text){
         File file = new File(pathName);
         try {

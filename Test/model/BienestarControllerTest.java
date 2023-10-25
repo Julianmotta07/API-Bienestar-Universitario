@@ -6,6 +6,13 @@ import Exceptions.IDException;
 import Exceptions.WeightException;
 import junit.framework.TestCase;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class BienestarControllerTest extends TestCase {
 
     private BienestarController controller;
@@ -114,6 +121,7 @@ public class BienestarControllerTest extends TestCase {
         setUpScenario2();
 
         controller.deleteStudent("A00370234");
+        String studentNotFound =  controller.deleteStudent("A00354637");
 
         assertEquals(38,controller.getStudents().size());
 
@@ -121,5 +129,162 @@ public class BienestarControllerTest extends TestCase {
 
         assertNotSame("Juliana",controller.getStudents().get(35).getName());
 
+        assertEquals("Error: A student with the entered ID does not exist.", studentNotFound);
+
+    }
+
+    /*Validación: Se validará que los usuarios se agrupen según la categoria que corresponda:
+
+       0 = Peso bajo
+       1 = Peso normal
+       2 = Sobrepeso
+       3 = Obesidad
+       4 = Obesidad morbida
+
+     */
+    public void testgetBmiCategory() {
+
+        setUpScenario1();
+
+        List<String> bmiCategories = new ArrayList<>();
+
+        for (int i = 0; i < 5; i++) {
+
+            double bmi = controller.getStudents().get(i).getBmiA();
+
+            String category = String.valueOf(controller.getBmiCategoryAux(bmi));
+            bmiCategories.add(category);
+        }
+
+
+        String expected = """
+                Estudiante 1: Maria - Categoría BMI Abril: 2
+                Estudiante 2: Maria Carmen - Categoría BMI Abril: 1
+                Estudiante 3: Carmen - Categoría BMI Abril: 2
+                Estudiante 4: Josefa - Categoría BMI Abril: 2
+                Estudiante 5: Ana Maria - Categoría BMI Abril: 1""";
+
+        String actual = controller.printStudentInfoAndBmiCategories(controller.getStudents(),bmiCategories);
+
+        assertEquals(expected,actual);
+        
+    }
+
+
+    public void testGenerateHistogram(){
+
+        setUpScenario1();
+
+        int lowWeight = 0;
+
+        int normalWeight = 0;
+
+        int overweight = 0;
+
+        int obesity = 0;
+
+        int morbidObesity = 0;
+
+        assertEquals("",controller.generateHistogramAux(0));
+
+        for (int i = 0; i < 5; i++) {
+
+            double bmi = controller.getStudents().get(i).getBmiS();
+
+            if (bmi < 18.50) {
+
+                lowWeight++;
+
+            } else if (bmi < 24.99) {
+
+                normalWeight++;
+
+            } else if (bmi < 29.99) {
+
+                overweight++;
+
+            }else if (bmi < 39.99) {
+
+                obesity++;
+
+            }else{
+
+                morbidObesity ++;
+
+            }
+
+        }
+
+
+        String lowWeightH = controller.generateHistogramAux(lowWeight);
+
+        String normalWeightH = controller.generateHistogramAux(normalWeight);
+
+        String overweightH = controller.generateHistogramAux(overweight);
+
+        String obesityH = controller.generateHistogramAux(obesity);
+
+        String morbidObesityH = controller.generateHistogramAux(morbidObesity);
+
+
+        assertEquals("", lowWeightH);
+
+        assertEquals("+", normalWeightH);
+
+        assertEquals("++", overweightH);
+
+        assertEquals("++", obesityH);
+
+        assertEquals("",morbidObesityH);
+
+    }
+
+    public void testSelection (){}
+
+    public void testBytesToTxTReport(){
+
+        setUpScenario1();
+
+        String pathName = "unitTest.txt";
+
+        String text = "This is a unit test \nAt the moment, the quality indicators are: \nError-failure density = 0.3\nReliability = 0.7\nCompleteness = 1.66";
+
+        String actual = controller.bytesToTxTReportAux(pathName, text);
+
+        assertEquals("Report generated!", actual);
+
+
+        File file = new File(pathName);
+
+        assertTrue(file.exists());
+
+        try {
+
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+
+            String line;
+
+            StringBuilder textFromFile = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+
+                textFromFile.append(line).append("\n");
+
+            }
+
+            reader.close();
+
+        } catch (IOException e) {
+
+            fail("Error al leer el archivo"+e.getMessage());
+
+        } finally {
+
+            file.delete(); //Se elimina el archivo generado, pues es solo un archivo de prueba para comparar.
+        }
+    }
+
+
+    public void testNutritionalReport() {
     }
 }

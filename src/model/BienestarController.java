@@ -18,7 +18,7 @@ public class BienestarController {
 
     public BienestarController() {
         students = new ArrayList<>();
-        loadDataBase();
+
     }
 
     public String addStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
@@ -266,7 +266,8 @@ public class BienestarController {
         return text.toString();
     }
 
-    private void selectionSort (ArrayList<Student> list, int filter){
+
+    public void selectionSort (ArrayList<Student> list, int filter){
         for (int i = 1; i < list.size(); i++) {
             Student temp = list.get(i);
             int j;
@@ -278,12 +279,8 @@ public class BienestarController {
     }
 
 
-    public int getBmiCategoryAux(double bmi){
-        return  getBmiCategory(bmi);
-    }
+    public int getBmiCategory(double bmi){
 
-
-    private int getBmiCategory(double bmi){
         if (bmi < 18.50) {
             return 0; // Category A
         } else if (bmi < 24.99) {
@@ -295,30 +292,11 @@ public class BienestarController {
         } else {
             return 4; // Category E
         }
+
     }
 
-    /*Método auxiliar usado para imprimir los resultados del método "getBmiCategoryAux"
-   Para un número determinado de estudiantes y no para todos los estudiantes registrados
-   Nota: Este método solo es usado para validar un test.
-   */
-    public  String printStudentInfoAndBmiCategories(ArrayList<Student> students, ArrayList<String> bmiCategories) {
 
-        StringBuilder result = new StringBuilder();
-
-        for (int i = 0; i < 5; i++) {
-            String nombre = students.get(i).getName();
-            String categoria = bmiCategories.get(i);
-            result.append("Estudiante ").append(i + 1).append(": ").append(nombre).append(" - Categoría BMI Abril: ").append(categoria).append("\n");
-        }
-
-        return result.toString().trim();
-    }
-
-    public String generateHistogramAux (int count){
-        return generateHistogram(count);
-    }
-
-    private String generateHistogram(int count) {
+    public String generateHistogram(int count) {
         StringBuilder bar = new StringBuilder();
         for (int i = 0; i < count; i++) {
             bar.append("+");
@@ -326,11 +304,8 @@ public class BienestarController {
         return bar.toString();
     }
 
-    public String bytesToTxTReportAux(String pathName, String text){
-        return bytesToTxTReport(pathName,text);
-    }
 
-    private String bytesToTxTReport(String pathName, String text){
+    public String bytesToTxTReport(String pathName, String text){
         File file = new File(pathName);
         try {
             FileOutputStream fos = new FileOutputStream(file);
@@ -348,6 +323,11 @@ public class BienestarController {
             System.out.println(student.toString());
             System.out.println();
         }
+    }
+
+    public void loadDataBaseAux (){
+
+        loadDataBase();
     }
 
     private void loadDataBase(){

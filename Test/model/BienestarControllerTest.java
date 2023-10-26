@@ -16,13 +16,17 @@ public class BienestarControllerTest extends TestCase {
 
     private BienestarController controller;
     public void setUpScenario1() {
+
         controller = new BienestarController();
+        controller.loadDataBaseAux();
 
     }
 
     public void setUpScenario2() {
 
         controller = new BienestarController();
+
+        controller.loadDataBaseAux();
 
         controller.addStudent("A00369076", "Juan", "Tobar", 23, 'M', 80, 78, 1.83);
         controller.addStudent("A00370234", "Juliana", "Parra",22,'F',55,50,1.60);
@@ -33,6 +37,18 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    public void setUpScenario3() {
+
+        controller = new BienestarController();
+
+        controller.addStudent("A00408965", "Martina", "Perez", 18, 'F',60 , 66, 1.64);
+        controller.addStudent("A00387964", "Yeison", "Rodriguez",20,'M',74,74,1.70);
+        controller.addStudent("A00397065", "Camilo","Barona",19,'M',72 , 70,1.82);
+        controller.addStudent("A00345231","Pedro","Aguirre",24,'M',76,76,1.78);
+        controller.addStudent("A00386954","Cristina","Mendoza",21,'F',65,66,1.62);
+
+
+    }
 
 
     //Verificar el cargue del archivo csv
@@ -147,14 +163,17 @@ public class BienestarControllerTest extends TestCase {
 
         ArrayList<String> bmiCategories = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
+        StringBuilder result = new StringBuilder();
 
-            double bmi = controller.getStudents().get(i).getBmiA();
+            for (int i = 0; i < 5; i++) {
 
-            String category = String.valueOf(controller.getBmiCategoryAux(bmi));
-            bmiCategories.add(category);
-        }
+                double bmi = controller.getStudents().get(i).getBmiA();
 
+                String category = String.valueOf(controller.getBmiCategory(bmi));
+
+                bmiCategories.add(category);
+
+            }
 
         String expected = """
                 Estudiante 1: Maria - Categoría BMI Abril: 2
@@ -163,7 +182,18 @@ public class BienestarControllerTest extends TestCase {
                 Estudiante 4: Josefa - Categoría BMI Abril: 2
                 Estudiante 5: Ana Maria - Categoría BMI Abril: 1""";
 
-        String actual = controller.printStudentInfoAndBmiCategories(controller.getStudents(),bmiCategories);
+
+            for (int i = 0; i < 5; i++) {
+
+                String nombre = controller.getStudents().get(i).getName();
+
+                String categoria = bmiCategories.get(i);
+
+                result.append("Estudiante ").append(i + 1).append(": ").append(nombre).append(" - Categoría BMI Abril: ").append(categoria).append("\n");
+            }
+
+
+        String actual = result.toString().trim();
 
         assertEquals(expected,actual);
         
@@ -184,7 +214,7 @@ public class BienestarControllerTest extends TestCase {
 
         int morbidObesity = 0;
 
-        assertEquals("",controller.generateHistogramAux(0));
+        assertEquals("",controller.generateHistogram(0));
 
         for (int i = 0; i < 5; i++) {
 
@@ -215,15 +245,15 @@ public class BienestarControllerTest extends TestCase {
         }
 
 
-        String lowWeightH = controller.generateHistogramAux(lowWeight);
+        String lowWeightH = controller.generateHistogram(lowWeight);
 
-        String normalWeightH = controller.generateHistogramAux(normalWeight);
+        String normalWeightH = controller.generateHistogram(normalWeight);
 
-        String overweightH = controller.generateHistogramAux(overweight);
+        String overweightH = controller.generateHistogram(overweight);
 
-        String obesityH = controller.generateHistogramAux(obesity);
+        String obesityH = controller.generateHistogram(obesity);
 
-        String morbidObesityH = controller.generateHistogramAux(morbidObesity);
+        String morbidObesityH = controller.generateHistogram(morbidObesity);
 
 
         assertEquals("", lowWeightH);
@@ -238,11 +268,89 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-    public void testSelection (){
+    public void testSelectionSortByAge (){
 
-        setUpScenario1();
+        setUpScenario3();
 
-        
+        StringBuilder act = new StringBuilder();
+
+        String expected = """
+                Martina - Edad : 18
+                Camilo - Edad : 19
+                Yeison - Edad : 20
+                Cristina - Edad : 21
+                Pedro - Edad : 24""";
+
+
+        controller.selectionSort(controller.getStudents(),2);
+
+
+        for (Student student : controller.getStudents()){
+
+            act.append(student.getName()).append(" - Edad : ").append(student.getAge()).append("\n");
+        }
+
+        String actual = act.toString().trim();
+
+         assertEquals(expected, actual);
+    }
+
+    public void testSelectionSortByLastName (){
+
+        setUpScenario3();
+
+        StringBuilder result = new StringBuilder();
+
+
+        String expected = """
+                Pedro Aguirre
+                Camilo Barona
+                Cristina Mendoza
+                Martina Perez
+                Yeison Rodriguez""";
+
+
+        controller.selectionSort(controller.getStudents(),3);
+
+
+        for (Student student : controller.getStudents()){
+
+            result.append(student.getName()).append(" ").append(student.getLastName()).append("\n");
+        }
+
+        String actual = result.toString().trim();
+
+        assertEquals(expected, actual);
+
+    }
+
+    public void testSelectionSortByBMI (){
+
+        setUpScenario3();
+
+        StringBuilder result = new StringBuilder();
+
+
+        String expected = """
+                Camilo Barona - BMI : 21.74
+                Martina Perez - BMI : 22.31
+                Pedro Aguirre - BMI : 23.99
+                Cristina Mendoza - BMI : 24.77
+                Yeison Rodriguez - BMI : 25.61""";
+
+
+
+        controller.selectionSort(controller.getStudents(),1);
+
+
+        for (Student student : controller.getStudents()){
+
+            result.append(student.getName()).append(" ").append(student.getLastName()).append(" - BMI : ").append(student.getBmiS()).append("\n");
+        }
+
+        String actual = result.toString().trim();
+
+        assertEquals(expected, actual);
 
     }
 
@@ -254,7 +362,7 @@ public class BienestarControllerTest extends TestCase {
 
         String text = "This is a unit test \nAt the moment, the quality indicators are: \nError-failure density = 0.3\nReliability = 0.7\nCompleteness = 1.66";
 
-        String actual = controller.bytesToTxTReportAux(pathName, text);
+        String actual = controller.bytesToTxTReport(pathName, text);
 
         assertEquals("Report generated!", actual);
 
@@ -304,17 +412,24 @@ public class BienestarControllerTest extends TestCase {
         }
 
 
-        String expected =  "\n3 students had change in their nutritional status.\n" +
-                "\n3 students presented a favorable change in their health, distributed as follows:\n" +
-                "\n0 changed from low weight to normal weight." +
-                "\n1 changed from overweight to normal weight." +
-                "\n2 changed from obesity to overweight or normal weight." +
-                "\n0 changed from morbid weight to overweight or normal weight.\n" +
-                "\n0 students presented an unfavorable change in their health, distributed as follows:\n" +
-                "\n0 changed from normal weight to low weight." +
-                "\n0 changed from normal weight to overweight or obesity." +
-                "\n0 changed from overweight to obesity or morbid obesity." +
-                "\n0 changed from obesity to morbid obesity.\n";
+        String expected = """
+
+                3 students had change in their nutritional status.
+
+                3 students presented a favorable change in their health, distributed as follows:
+
+                0 changed from low weight to normal weight.
+                1 changed from overweight to normal weight.
+                2 changed from obesity to overweight or normal weight.
+                0 changed from morbid weight to overweight or normal weight.
+
+                0 students presented an unfavorable change in their health, distributed as follows:
+
+                0 changed from normal weight to low weight.
+                0 changed from normal weight to overweight or obesity.
+                0 changed from overweight to obesity or morbid obesity.
+                0 changed from obesity to morbid obesity.
+                """;
 
         assertEquals(expected,controller.nutritionalReportIndicatorsAux(studentsOnTrial));
 
@@ -323,7 +438,7 @@ public class BienestarControllerTest extends TestCase {
 
     public void testNutritionalReportListAux() {
 
-        setUpScenario1();
+        setUpScenario3();
 
        assertNull(controller.nutritionalReportListAux(2));
     }

@@ -238,7 +238,13 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-    public void testSelection (){}
+    public void testSelection (){
+
+        setUpScenario1();
+
+        
+
+    }
 
     public void testBytesToTxTReport(){
 
@@ -284,6 +290,41 @@ public class BienestarControllerTest extends TestCase {
     }
 
 
-    public void testNutritionalReport() {
+    public void testNutritionalReportIndicators() {
+
+
+        setUpScenario1();
+
+        ArrayList <Student> studentsOnTrial = new ArrayList<>();
+
+        for (int i = 0; i <5 ; i++) {
+
+            studentsOnTrial.add(controller.getStudents().get(i));
+
+        }
+
+
+        String expected =  "\n3 students had change in their nutritional status.\n" +
+                "\n3 students presented a favorable change in their health, distributed as follows:\n" +
+                "\n0 changed from low weight to normal weight." +
+                "\n1 changed from overweight to normal weight." +
+                "\n2 changed from obesity to overweight or normal weight." +
+                "\n0 changed from morbid weight to overweight or normal weight.\n" +
+                "\n0 students presented an unfavorable change in their health, distributed as follows:\n" +
+                "\n0 changed from normal weight to low weight." +
+                "\n0 changed from normal weight to overweight or obesity." +
+                "\n0 changed from overweight to obesity or morbid obesity." +
+                "\n0 changed from obesity to morbid obesity.\n";
+
+        assertEquals(expected,controller.nutritionalReportIndicatorsAux(studentsOnTrial));
+
+
+    }
+
+    public void testNutritionalReportListAux() {
+
+        setUpScenario1();
+
+       assertNull(controller.nutritionalReportListAux(2));
     }
 }

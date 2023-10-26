@@ -161,7 +161,7 @@ public class BienestarController {
         if (mode == 1) {
             text.append(nutritionalReportList(filter));
         } else {
-            text.append(nutritionalReportIndicators());
+            text.append(nutritionalReportIndicators(students));
         }
 
         text.append("\n====================================================================================");
@@ -169,7 +169,12 @@ public class BienestarController {
         return bytesToTxTReport("data/Nutritional_report.txt", text.toString());
     }
 
-    private String nutritionalReportIndicators(){
+    public String nutritionalReportIndicatorsAux(ArrayList<Student> students){
+
+        return nutritionalReportIndicators(students);
+    }
+    private String nutritionalReportIndicators(ArrayList<Student> students){
+
         int[] goodChanges = new int[4], badChanges = new int[4];
         for (Student student : students){
             int bmiSepCategory = getBmiCategory(student.getBmiS());
@@ -228,6 +233,10 @@ public class BienestarController {
                 "\n" + badChanges[3] + " changed from obesity to morbid obesity.\n";
     }
 
+    public String nutritionalReportListAux(int filter){
+
+        return nutritionalReportList(filter);
+    }
     private String nutritionalReportList(int filter){
 
         StringBuilder text = new StringBuilder("\nStudents sorted by ");

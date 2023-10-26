@@ -7,12 +7,12 @@ Students:
 - Lina Andrade
 - Deiner Julián Motta
 
-Second Iteration: 
+Third Iteration: 
 
 Quality indicators: 
 
-Error-failure density = 0.2
+Error-failure density = 0.18
 
-Reliability = 0.8
+Reliability = 0.82
 
-Completeness = 1.66
+Completeness = 1.83

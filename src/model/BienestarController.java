@@ -1,34 +1,37 @@
 package model;
 
 import Exceptions.*;
-import com.google.gson.Gson;
-
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class BienestarController {
 
     ArrayList<Student> students;
-    public static int decimalPlaces = 2;
-    Gson gson;
+    private final String GSON_FILE_NAME = "data/students.json";
+    private final String CSV_FILE_NAME = "data/freshman_kgs.csv";
+    private final DataReader reader;
+    private final DataWriter writer;
 
     public BienestarController() {
         students = new ArrayList<>();
-
+        reader = new DataReader();
+        writer = new DataWriter();
+        File file = new File(GSON_FILE_NAME);
+        if (file.exists()) {
+            reader.readGsonStudentsFile(GSON_FILE_NAME, students);
+        }
     }
 
     public String addStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
         String msg = "Error: A student with the entered ID already exists.";
         if (searchStudent(studentCode) == null){
             BigDecimal decimalS = new BigDecimal(weightS / (height * height));
-            decimalS = decimalS.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            decimalS = decimalS.setScale(2, RoundingMode.HALF_UP);
             double bmiS = decimalS.doubleValue();
             BigDecimal decimalsA = new BigDecimal(weightA / (height * height));
-            decimalsA = decimalsA.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            decimalsA = decimalsA.setScale(2, RoundingMode.HALF_UP);
             double bmiA = decimalsA.doubleValue();
             Student student = new Student(studentCode, name, lastName, age, sex, weightS, weightA, height, bmiS, bmiA);
             students.add(student);
@@ -49,10 +52,10 @@ public class BienestarController {
         if (weightS != 0 || weightA != 0 || height != 0){
             double h = student.getHeight();
             BigDecimal decimalS = BigDecimal.valueOf(student.getWeightS() / (h * h));
-            decimalS = decimalS.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            decimalS = decimalS.setScale(2, RoundingMode.HALF_UP);
             student.setBmiS(decimalS.doubleValue());
             BigDecimal decimalA = BigDecimal.valueOf(student.getWeightA() / (h * h));
-            decimalA = decimalA.setScale(decimalPlaces, RoundingMode.HALF_UP);
+            decimalA = decimalA.setScale(2, RoundingMode.HALF_UP);
             student.setBmiA(decimalA.doubleValue());
         }
         return "Student information successfully edited!";
@@ -92,7 +95,7 @@ public class BienestarController {
             text.append(classificationReportList(2, filter));
         }
 
-        return bytesToTxTReport("data/Classification_report.txt", text.toString());
+        return writer.bytesToTxTReport("data/Classification_report.txt", text.toString());
     }
 
     private String classificationReportHistogram(int month){
@@ -166,15 +169,14 @@ public class BienestarController {
 
         text.append("\n====================================================================================");
 
-        return bytesToTxTReport("data/Nutritional_report.txt", text.toString());
+        return writer.bytesToTxTReport("data/Nutritional_report.txt", text.toString());
     }
 
     public String nutritionalReportIndicatorsAux(ArrayList<Student> students){
-
         return nutritionalReportIndicators(students);
     }
-    private String nutritionalReportIndicators(ArrayList<Student> students){
 
+    private String nutritionalReportIndicators(ArrayList<Student> students){
         int[] goodChanges = new int[4], badChanges = new int[4];
         for (Student student : students){
             int bmiSepCategory = getBmiCategory(student.getBmiS());
@@ -233,11 +235,7 @@ public class BienestarController {
                 "\n" + badChanges[3] + " changed from obesity to morbid obesity.\n";
     }
 
-    public String nutritionalReportListAux(int filter){
-
-        return nutritionalReportList(filter);
-    }
-    private String nutritionalReportList(int filter){
+    public String nutritionalReportList(int filter){
 
         StringBuilder text = new StringBuilder("\nStudents sorted by ");
         if (filter == 1){
@@ -266,7 +264,6 @@ public class BienestarController {
         return text.toString();
     }
 
-
     public void selectionSort (ArrayList<Student> list, int filter){
         for (int i = 1; i < list.size(); i++) {
             Student temp = list.get(i);
@@ -278,9 +275,7 @@ public class BienestarController {
         }
     }
 
-
     public int getBmiCategory(double bmi){
-
         if (bmi < 18.50) {
             return 0; // Category A
         } else if (bmi < 24.99) {
@@ -292,9 +287,7 @@ public class BienestarController {
         } else {
             return 4; // Category E
         }
-
     }
-
 
     public String generateHistogram(int count) {
         StringBuilder bar = new StringBuilder();
@@ -304,58 +297,21 @@ public class BienestarController {
         return bar.toString();
     }
 
+    public String importData(){
+        reader.importStudentsData(CSV_FILE_NAME, students);
+        return "Data from csv imported!.";
 
-    public String bytesToTxTReport(String pathName, String text){
-        File file = new File(pathName);
-        try {
-            FileOutputStream fos = new FileOutputStream(file);
-            byte[] bytes = text.getBytes(StandardCharsets.UTF_8);
-            fos.write(bytes);
-            fos.close();
-        } catch (IOException e) {
-            System.out.println(e);
-        }
-        return "Report generated!";
+    }
+
+    public String exportData(){
+        writer.writeGsonStudentsFile(GSON_FILE_NAME, students);
+        return "Model exported!.";
     }
 
     public void print(){
         for (Student student: students) {
             System.out.println(student.toString());
             System.out.println();
-        }
-    }
-
-    public void loadDataBaseAux (){
-
-        loadDataBase();
-    }
-
-    private void loadDataBase(){
-        try {
-            FileReader fileReader = new FileReader("data/freshman_kgs.csv");
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            String line;
-            bufferedReader.readLine();
-            while ((line = bufferedReader.readLine()) != null) {
-                String[] parts = line.split("\\,");
-                if (parts.length >= 10) {
-                    String studentCode = parts[0];
-                    String name = parts[1];
-                    String lastName = parts[2];
-                    int age = Integer.parseInt(parts[3]);
-                    char sex = parts[4].charAt(0);
-                    double weightS = Double.parseDouble(parts[5]);
-                    double weightA = Double.parseDouble(parts[6]);
-                    double height = Double.parseDouble(parts[7]);
-                    double bmiS = Double.parseDouble(parts[8]);
-                    double bmiA = Double.parseDouble(parts[9]);
-                    Student student = new Student(studentCode, name, lastName, age, sex, weightS, weightA, height, bmiS, bmiA);
-                    students.add(student);
-                }
-            }
-            bufferedReader.close();
-        } catch (IOException e) {
-            System.out.println(e);
         }
     }
 
@@ -410,38 +366,5 @@ public class BienestarController {
     public ArrayList<Student> getStudents() {
         return students;
     }
-    public void setStudents(ArrayList<Student> students) {
-        this.students = students;
-    }
 
-    public void writeGsonStudents(){
-        String json = gson.toJson(students);
-        try{
-            FileOutputStream fos = new FileOutputStream(("data/studentList.json"));
-            fos.write(json.getBytes(StandardCharsets.UTF_8));
-            fos.close();
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void readGsonStudent(){
-        File file = new File("studentList.json");
-        if (file.exists()){
-            try {
-                FileInputStream fis = new FileInputStream(file);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-                String json = "";
-                String line;
-                if ((line = reader.readLine())!=null){
-                    json = line;
-                }
-                fis.close();
-                Student [] student = gson.fromJson(json, Student[].class);
-                students.addAll(Arrays.asList(student));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }

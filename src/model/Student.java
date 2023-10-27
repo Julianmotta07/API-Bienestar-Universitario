@@ -125,7 +125,9 @@ public class Student {
             return Double.compare(this.bmiA, o.bmiA);
         } else if (type == 2) {
             return Integer.compare(this.age, o.age);
-        } else
+        } else if (type == 3){
             return this.lastName.compareTo(o.lastName);
+        }
+            return Double.compare(this.bmiS, o.bmiS);
         }
 }

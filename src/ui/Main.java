@@ -27,9 +27,10 @@ public class Main {
             System.out.println("2: Edit student.....................");
             System.out.println("3: Delete student...................");
             System.out.println("4: Generate report..................");
-            System.out.println("5: Export current state of the model");
-            System.out.println("6: Print (temporal).................");
-            System.out.println("7: Exit.............................");
+            System.out.println("5: Import data......................");
+            System.out.println("6: Export current state of the model");
+            System.out.println("7: Print (temporal).................");
+            System.out.println("8: Exit.............................");
             System.out.println("------------------------------------");
             choice = sc.nextInt();
             sc.nextLine();
@@ -55,22 +56,27 @@ public class Main {
                     sc.nextLine();
                     break;
                 case 5:
-                    exportModel();
+                    importData();
                     System.out.println("Press Enter to return to the menu...");
                     sc.nextLine();
                     break;
                 case 6:
-                    print();
+                    exportModel();
                     System.out.println("Press Enter to return to the menu...");
                     sc.nextLine();
                     break;
                 case 7:
+                    print();
+                    System.out.println("Press Enter to return to the menu...");
+                    sc.nextLine();
+                    break;
+                case 8:
                     break;
                 default:
                     System.out.println("Invalid option, try again!");
                     sc.nextLine();
             }
-        } while (choice != 7);
+        } while (choice != 8);
     }
 
     public void registerStudent(){
@@ -356,8 +362,14 @@ public class Main {
         System.out.println(msg);
     }
 
-    public void exportModel(){
+    public void importData(){
+        String msg = controller.importData();
+        System.out.println(msg);
+    }
 
+    public void exportModel(){
+        String msg = controller.exportData();
+        System.out.println(msg);
     }
 
     public void print(){

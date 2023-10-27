@@ -5,28 +5,25 @@ import Exceptions.HeightException;
 import Exceptions.IDException;
 import Exceptions.WeightException;
 import junit.framework.TestCase;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 
 public class BienestarControllerTest extends TestCase {
 
     private BienestarController controller;
+
     public void setUpScenario1() {
 
         controller = new BienestarController();
-        controller.loadDataBaseAux();
+        controller.getStudents().clear();
+        controller.importData();
 
     }
 
     public void setUpScenario2() {
 
         controller = new BienestarController();
-
-        controller.loadDataBaseAux();
+        controller.getStudents().clear();
+        controller.importData();
 
         controller.addStudent("A00369076", "Juan", "Tobar", 23, 'M', 80, 78, 1.83);
         controller.addStudent("A00370234", "Juliana", "Parra",22,'F',55,50,1.60);
@@ -40,6 +37,8 @@ public class BienestarControllerTest extends TestCase {
     public void setUpScenario3() {
 
         controller = new BienestarController();
+
+        controller.getStudents().clear();
 
         controller.addStudent("A00408965", "Martina", "Perez", 18, 'F',60 , 66, 1.64);
         controller.addStudent("A00387964", "Yeison", "Rodriguez",20,'M',74,74,1.70);
@@ -91,42 +90,42 @@ public class BienestarControllerTest extends TestCase {
             controller.validateWeight(controller.getStudents().get(35).getWeightS());
             controller.validateID(controller.getStudents().get(35).getStudentCode());
 
-            } catch (AgeException e) {
+        } catch (AgeException e) {
 
-                assertEquals("Invalid age range.",e.getMessage());
+            assertEquals("Invalid age range.",e.getMessage());
 
-            } catch (IDException e) {
+        } catch (IDException e) {
 
-                assertEquals("The code must begin with A.", e.getMessage());
+            assertEquals("The code must begin with A.", e.getMessage());
 
-            } catch (HeightException e) {
+        } catch (HeightException e) {
 
-                assertEquals("Invalid height range.", e.getMessage());
+            assertEquals("Invalid height range.", e.getMessage());
 
-            } catch (WeightException e){
+        } catch (WeightException e){
 
-                assertEquals("Invalid weight range.", e.getMessage());
+            assertEquals("Invalid weight range.", e.getMessage());
 
-            }
+        }
 
 
     }
 
     public void testEditStudent(){
 
-      setUpScenario2();
+        setUpScenario2();
 
-      String editStudent = controller.editStudent("A00369076", "Juan", "Toledo", 23, 'M', 80, 78, 1.87);
+        String editStudent = controller.editStudent("A00369076", "Juan", "Toledo", 23, 'M', 80, 78, 1.87);
 
-      assertNull(controller.searchStudent("A00467589"));
+        assertNull(controller.searchStudent("A00467589"));
 
-      assertEquals("Juan",controller.getStudents().get(34).getName());
+        assertEquals("Juan",controller.getStudents().get(34).getName());
 
-      assertNotSame(1.83,controller.getStudents().get(34).getHeight());
+        assertNotSame(1.83,controller.getStudents().get(34).getHeight());
 
-      assertEquals("Student information successfully edited!",editStudent);
+        assertEquals("Student information successfully edited!",editStudent);
 
-      assertEquals(22.88,controller.getStudents().get(34).getBmiS());
+        assertEquals(22.88,controller.getStudents().get(34).getBmiS());
 
     }
 
@@ -165,15 +164,15 @@ public class BienestarControllerTest extends TestCase {
 
         StringBuilder result = new StringBuilder();
 
-            for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
 
-                double bmi = controller.getStudents().get(i).getBmiA();
+            double bmi = controller.getStudents().get(i).getBmiA();
 
-                String category = String.valueOf(controller.getBmiCategory(bmi));
+            String category = String.valueOf(controller.getBmiCategory(bmi));
 
-                bmiCategories.add(category);
+            bmiCategories.add(category);
 
-            }
+        }
 
         String expected = """
                 Estudiante 1: Maria - Categoría BMI Abril: 2
@@ -183,20 +182,20 @@ public class BienestarControllerTest extends TestCase {
                 Estudiante 5: Ana Maria - Categoría BMI Abril: 1""";
 
 
-            for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 5; i++) {
 
-                String nombre = controller.getStudents().get(i).getName();
+            String nombre = controller.getStudents().get(i).getName();
 
-                String categoria = bmiCategories.get(i);
+            String categoria = bmiCategories.get(i);
 
-                result.append("Estudiante ").append(i + 1).append(": ").append(nombre).append(" - Categoría BMI Abril: ").append(categoria).append("\n");
-            }
+            result.append("Estudiante ").append(i + 1).append(": ").append(nombre).append(" - Categoría BMI Abril: ").append(categoria).append("\n");
+        }
 
 
         String actual = result.toString().trim();
 
         assertEquals(expected,actual);
-        
+
     }
 
 
@@ -292,7 +291,7 @@ public class BienestarControllerTest extends TestCase {
 
         String actual = act.toString().trim();
 
-         assertEquals(expected, actual);
+        assertEquals(expected, actual);
     }
 
     public void testSelectionSortByLastName (){
@@ -340,7 +339,7 @@ public class BienestarControllerTest extends TestCase {
 
 
 
-        controller.selectionSort(controller.getStudents(),1);
+        controller.selectionSort(controller.getStudents(),4);
 
 
         for (Student student : controller.getStudents()){
@@ -353,50 +352,6 @@ public class BienestarControllerTest extends TestCase {
         assertEquals(expected, actual);
 
     }
-
-    public void testBytesToTxTReport(){
-
-        setUpScenario1();
-
-        String pathName = "unitTest.txt";
-
-        String text = "This is a unit test \nAt the moment, the quality indicators are: \nError-failure density = 0.3\nReliability = 0.7\nCompleteness = 1.66";
-
-        String actual = controller.bytesToTxTReport(pathName, text);
-
-        assertEquals("Report generated!", actual);
-
-
-        File file = new File(pathName);
-
-        assertTrue(file.exists());
-
-        try {
-
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-
-            String line;
-
-            StringBuilder textFromFile = new StringBuilder();
-
-            while ((line = reader.readLine()) != null) {
-
-                textFromFile.append(line).append("\n");
-
-            }
-
-            reader.close();
-
-        } catch (IOException e) {
-
-            fail("Error al leer el archivo"+e.getMessage());
-
-        } finally {
-
-            file.delete(); //Se elimina el archivo generado, pues es solo un archivo de prueba para comparar.
-        }
-    }
-
 
     public void testNutritionalReportIndicators() {
 
@@ -440,6 +395,6 @@ public class BienestarControllerTest extends TestCase {
 
         setUpScenario3();
 
-       assertNull(controller.nutritionalReportListAux(2));
+        assertNull(controller.nutritionalReportList(2));
     }
 }

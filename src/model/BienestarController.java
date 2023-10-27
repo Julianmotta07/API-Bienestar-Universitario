@@ -98,7 +98,7 @@ public class BienestarController {
         return writer.bytesToTxTReport("data/Classification_report.txt", text.toString());
     }
 
-    private String classificationReportHistogram(int month){
+    public String classificationReportHistogram(int month){
 
         int[] categoryCounts = new int[5];
 
@@ -120,10 +120,11 @@ public class BienestarController {
             text.append(category[i]).append(" ").append(generateHistogram(categoryCounts[i])).append("\n");
         }
 
-        return text.toString();
+        return text.toString().trim();
     }
 
-    private String classificationReportList(int month, int filter){
+
+    public String classificationReportList(int month, int filter){
 
         StringBuilder text = new StringBuilder("\nStudents sorted by ");
         if (filter == 1){

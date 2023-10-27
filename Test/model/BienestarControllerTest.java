@@ -4,6 +4,7 @@ import Exceptions.AgeException;
 import Exceptions.HeightException;
 import Exceptions.IDException;
 import Exceptions.WeightException;
+import com.google.gson.internal.bind.util.ISO8601Utils;
 import junit.framework.TestCase;
 import java.util.ArrayList;
 
@@ -323,7 +324,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-    public void testSelectionSortByBMI (){
+    public void testSelectionSortByBMISep (){
 
         setUpScenario3();
 
@@ -353,6 +354,34 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    public void testSelectionSortByBMIApr(){
+
+        setUpScenario3();
+
+        StringBuilder result = new StringBuilder();
+
+
+        String expected = """
+                Camilo Barona - BMI : 21.13
+                Pedro Aguirre - BMI : 23.99
+                Martina Perez - BMI : 24.54
+                Cristina Mendoza - BMI : 25.15
+                Yeison Rodriguez - BMI : 25.61""";
+
+
+        controller.selectionSort(controller.getStudents(),1);
+
+
+        for (Student student : controller.getStudents()){
+
+            result.append(student.getName()).append(" ").append(student.getLastName()).append(" - BMI : ").append(student.getBmiA()).append("\n");
+        }
+
+        String actual = result.toString().trim();
+
+        assertEquals(expected, actual);
+
+    }
     public void testNutritionalReportIndicators() {
 
 
@@ -391,10 +420,66 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-    public void testNutritionalReportListAux() {
+    public void testNutritionalReportList() {
 
         setUpScenario3();
 
-        assertNull(controller.nutritionalReportList(2));
+        assertNull(controller.getStudents());
+
+
+
+    }
+
+    public void testClassificationReportList() {
+
+        setUpScenario3();
+
+        controller.classificationReportList(1, 2);
+
+        String expected = "\nStudents sorted by age :\n";
+
+        String actual = controller.classificationReportList(1, 2);
+
+
+        assertEquals(expected,actual);
+
+        //Validar
+    }
+
+    public void testClassificationReportHistogram () {
+
+        setUpScenario3();
+
+        String act = controller.classificationReportHistogram(1);
+
+       String expected = """
+               Distribution:
+               A: 0 students
+               B: 4 students
+               C: 1 students
+               D: 0 students
+               E: 0 students
+               
+               Histogram:
+               A\s
+               B ++++
+               C +
+               D\s
+               E""";
+
+
+       assertEquals(expected,act);
+    }
+
+    public void testSearch(){
+
+        setUpScenario2();
+
+        Student s = controller.searchStudent("A00360987");
+
+        assertSame(controller.getStudents().get(21).getName(),s.getName());
+
+        //Ampliar más casos.
+
     }
 }

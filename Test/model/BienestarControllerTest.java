@@ -65,8 +65,13 @@ public class BienestarControllerTest extends TestCase {
         setUpScenario1();
 
         assertNotNull(controller.getStudents());
+
         assertEquals(34, controller.getStudents().size());
+
         assertEquals("Maria",controller.getStudents().get(0).getName());
+        assertEquals("Karen",controller.getStudents().get(33).getName());
+
+        assertEquals("Juan Jose",controller.getStudents().get(23));
 
     }
 
@@ -83,6 +88,8 @@ public class BienestarControllerTest extends TestCase {
         assertEquals(35,controller.getStudents().size());
 
     }
+
+
 
     public void testExceptions() {
 
@@ -467,13 +474,95 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    public void testNutritionalReportListByAge(){
+
+        setUpScenario2();
+
+        String expected = """
+                Students sorted by age:
+                                
+                - Code: A00380779
+                Name: Maria Carmen Hernandez
+                Age: 19
+                Sex: F
+                Height: 1.62
+                Sep. Weight: 72.0
+                Apr. weight: 59.0
+                Sep. BMI: 27.43
+                Apr. BMI: 22.48
+                                
+                - Code: A00380776
+                Name: Maria Garcia
+                Age: 20
+                Sex: F
+                Height: 1.72
+                Sep. Weight: 97.0
+                Apr. weight: 86.0
+                Sep. BMI: 32.79
+                Apr. BMI: 29.07
+                                
+                - Code: A00370864
+                Name: Jose Antonio Munoz
+                Age: 20
+                Sex: O
+                Height: 1.69
+                Sep. Weight: 53.0
+                Apr. weight: 52.0
+                Sep. BMI: 18.56
+                Apr. BMI: 18.21
+                                
+                - Code: A00380345
+                Name: Pablo Blandon
+                Age: 20
+                Sex: M
+                Height: 1.71
+                Sep. Weight: 75.0
+                Apr. weight: 73.0
+                Sep. BMI: 25.65
+                Apr. BMI: 24.96
+                                
+                - Code: A00370987
+                Name: Josefa Lopez
+                Age: 21
+                Sex: F
+                Height: 1.74
+                Sep. Weight: 93.0
+                Apr. weight: 88.0
+                Sep. BMI: 30.72
+                Apr. BMI: 29.07
+                                
+                - Code: A00347601
+                Name: Cristina Moreno
+                Age: 24
+                Sex: F
+                Height: 1.66
+                Sep. Weight: 68.0
+                Apr. weight: 69.0
+                Sep. BMI: 24.68
+                Apr. BMI: 25.04
+                                
+                - Code: A00356473
+                Name: Jose Perez
+                Age: 24
+                Sex: M
+                Height: 1.7
+                Sep. Weight: 50.0
+                Apr. weight: 57.0
+                Sep. BMI: 17.3
+                Apr. BMI: 19.72
+                                
+                A total of 7 students had change in their nutritional status.""";
+
+        String actual = controller.nutritionalReportList(2);
+
+        assertEquals(expected,actual);
+    }
+
     public void testClassificationReportListByAge() {
 
         setUpScenario3();
 
-        controller.classificationReportList(1, 2);
-
-        String expected = """
+       String expected = """
                 Students sorted by age:
                 
                 B:
@@ -536,9 +625,66 @@ public class BienestarControllerTest extends TestCase {
 
     public void testClassificationByLastname(){
 
-        String a = "A";
+        setUpScenario3();
 
-        assertNotSame("A",a);
+        String expected = """
+                Students sorted by last name:
+                
+                B:
+                - Code: A00345231
+                Name: Pedro Aguirre
+                Age: 24
+                Sex: M
+                Height: 1.78
+                Sep. Weight: 76.0
+                Apr. weight: 76.0
+                Sep. BMI: 23.99
+                Apr. BMI: 23.99
+
+                - Code: A00397065
+                Name: Camilo Barona
+                Age: 19
+                Sex: M
+                Height: 1.82
+                Sep. Weight: 72.0
+                Apr. weight: 70.0
+                Sep. BMI: 21.74
+                Apr. BMI: 21.13
+
+                - Code: A00386954
+                Name: Cristina Mendoza
+                Age: 21
+                Sex: F
+                Height: 1.62
+                Sep. Weight: 65.0
+                Apr. weight: 66.0
+                Sep. BMI: 24.77
+                Apr. BMI: 25.15
+                
+                - Code: A00408965
+                Name: Martina Perez
+                Age: 18
+                Sex: F
+                Height: 1.64
+                Sep. Weight: 60.0
+                Apr. weight: 66.0
+                Sep. BMI: 22.31
+                Apr. BMI: 24.54
+
+                C:
+                - Code: A00387964
+                Name: Yeison Rodriguez
+                Age: 20
+                Sex: M
+                Height: 1.7
+                Sep. Weight: 74.0
+                Apr. weight: 74.0
+                Sep. BMI: 25.61
+                Apr. BMI: 25.61""";
+
+        String actual = controller.classificationReportList(1, 3);
+
+        assertEquals(expected,actual);
 
     }
 

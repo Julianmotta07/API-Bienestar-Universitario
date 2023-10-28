@@ -11,12 +11,13 @@ Eighth Iteration:
 
 Quality indicators: 
 
-Error-failure density = 0.047
+Error-failure density = 0
 
-Reliability = 0.95
+Reliability = 1
 
-Completeness = 3.5
+Completeness = 3.66
 
-Method "editStudent" failed. I don't know that te code can be modified,but it's requested by 
-parameter to search for the user. So, if the user changes the code and passes it by parameter, the output will
-tell the user that the student with the entered ID doesn't exist. 
+Total number of tests at the moment: 22
+
+Correction - "editStudent" method: The student's code is only required to search for the student, but it's not 
+included in the options to edit. The validation is done in "Main".

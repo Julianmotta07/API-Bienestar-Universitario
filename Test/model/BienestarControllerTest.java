@@ -1,13 +1,17 @@
 package model;
 
+import static org.junit.jupiter.api.Assertions.*;
 import Exceptions.AgeException;
 import Exceptions.HeightException;
 import Exceptions.IDException;
 import Exceptions.WeightException;
-import junit.framework.TestCase;
+import org.junit.jupiter.api.Test;
+
 import java.util.ArrayList;
 
-public class BienestarControllerTest extends TestCase {
+
+
+public class BienestarControllerTest  {
 
     private BienestarController controller;
 
@@ -49,7 +53,9 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+
     public void setUpScenario4(){
+
         controller = new BienestarController();
 
         controller.getStudents().clear();
@@ -59,6 +65,7 @@ public class BienestarControllerTest extends TestCase {
     }
 
 
+    @Test
     //Verificar el cargue del archivo csv
     public void testAddStudentsFromCvsFile() {
 
@@ -75,6 +82,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testAddStudents (){
 
         setUpScenario1();
@@ -90,7 +98,7 @@ public class BienestarControllerTest extends TestCase {
     }
 
 
-
+    @Test
     public void testExceptions() {
 
         try {
@@ -127,6 +135,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testEditStudent(){
 
         setUpScenario2();
@@ -137,7 +146,7 @@ public class BienestarControllerTest extends TestCase {
 
         assertEquals("Juan",controller.getStudents().get(34).getName());
 
-        assertNotSame(1.83,controller.getStudents().get(34).getHeight());
+        assertNotEquals(1.83,controller.getStudents().get(34).getHeight());
 
         assertEquals("Student information successfully edited!",editStudent);
 
@@ -145,22 +154,70 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public  void testEditStudent2(){
 
         setUpScenario3();
 
-        Student aux = controller.getStudents().get(0);
+        String[] names = {"Mara","Yeison", "Cristian", "Pedro", "Cristina"};
+
+        String[] surname = {"Guerrero","Rodriguez", "Barrera", "Aguirre", "Mendoza"};
+
+        int[] ages = {23,25, 19, 24, 28};
+
+        char[] sex = {'F','O', 'M', 'M', 'F'};
+
+        double[] weightsS= {60,72, 72, 78, 65};
+
+        double[] weightsA= {66, 70, 75, 76, 65};
+
+        double[] heights  = {1.74,1.71, 1.82, 1.78, 1.64};
 
 
-        controller.editStudent("A00408965", "Mara", "Guerrero", 23, 'F',60 , 66, 1.74);
+       for (int i = 0; i <5; i++){
 
-       assertNotSame(aux.toString(),controller.getStudents().get(0));
+           String actualStudent = (controller.getStudents().get(i).getStudentCode());
 
-       controller.editStudent("A00387065", "Camila","Castillo",19,'M',72 , 70,1.82);
+           controller.editStudent(actualStudent,names[i],surname[i],ages[i],sex[i],weightsS[i],weightsA[i],heights[i]);
+       }
+
+       String expected_studentZero = """
+                Code: A00408965
+               Name: Martina Perez
+               Age: 18
+               Sex: F
+               Height: 1.64
+               Sep. Weight: 60.0
+               Apr. weight: 66.0
+               Sep. BMI: 22.31
+               Apr. BMI: 24.54
+               """;
+       String expected_studentOne = """
+                Code: A00387964
+               Name: Yeison Rodriguez
+               Age: 25
+               Sex: O
+               Height: 1.71
+               Sep. Weight: 72.0
+               Apr. weight: 70.0
+               Sep. BMI: 24.62
+               Apr. BMI: 23.94
+               """ ;
+
+       assertNotEquals(expected_studentZero,controller.getStudents().get(0).toString());
+
+       assertEquals(expected_studentOne,controller.getStudents().get(1).toString());
+
+       assertEquals(21.74,controller.getStudents().get(2).getBmiS());
+
+       assertNotEquals(76,controller.getStudents().get(3).getWeightS());
+
+       assertNotEquals(66,controller.getStudents().get(4).getWeightA());
 
     }
 
 
+    @Test
     public void testDeleteStudent() {
 
         setUpScenario2();
@@ -173,10 +230,22 @@ public class BienestarControllerTest extends TestCase {
 
         assertNull(controller.searchStudent("A00370234"));
 
-        assertNotSame("Juliana",controller.getStudents().get(35).getName());
+        assertNotEquals("Juliana",controller.getStudents().get(35).getName());
 
         assertEquals("Error: A student with the entered ID does not exist.", studentNotFound);
 
+    }
+
+    @Test
+    public void deleteStudent2(){
+
+        setUpScenario4();
+
+        controller.deleteStudent("A00154324");
+        controller.deleteStudent("A00986756");
+
+        assertTrue(controller.getStudents().isEmpty());
+        assertFalse(controller.getStudents().size()!=0);
     }
 
     /*Validación: Se validará que los usuarios se agrupen según la categoria que corresponda:
@@ -188,6 +257,7 @@ public class BienestarControllerTest extends TestCase {
        4 = Obesidad morbida
 
      */
+    @Test
     public void testgetBmiCategory() {
 
         setUpScenario1();
@@ -230,7 +300,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-
+    @Test
     public void testGenerateHistogram(){
 
         setUpScenario1();
@@ -299,6 +369,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testSelectionSortByAge (){
 
         setUpScenario3();
@@ -326,6 +397,7 @@ public class BienestarControllerTest extends TestCase {
         assertEquals(expected, actual);
     }
 
+    @Test
     public void testSelectionSortByLastName (){
 
         setUpScenario3();
@@ -355,6 +427,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testSelectionSortByBMISep (){
 
         setUpScenario3();
@@ -368,7 +441,6 @@ public class BienestarControllerTest extends TestCase {
                 Pedro Aguirre - BMI : 23.99
                 Cristina Mendoza - BMI : 24.77
                 Yeison Rodriguez - BMI : 25.61""";
-
 
 
         controller.selectionSort(controller.getStudents(),4);
@@ -385,6 +457,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testSelectionSortByBMIApr(){
 
         setUpScenario3();
@@ -413,6 +486,8 @@ public class BienestarControllerTest extends TestCase {
         assertEquals(expected, actual);
 
     }
+
+    @Test
     public void testNutritionalReportIndicators() {
 
 
@@ -451,6 +526,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testNutritionalReportListByBMI() {
 
         setUpScenario3();
@@ -475,6 +551,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testNutritionalReportListByBMIUnchanged() {
 
        setUpScenario4();
@@ -490,6 +567,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testNutritionalReportListByAge(){
 
         setUpScenario2();
@@ -574,6 +652,7 @@ public class BienestarControllerTest extends TestCase {
         assertEquals(expected,actual);
     }
 
+    @Test
     public void testClassificationReportListByAge() {
 
         setUpScenario3();
@@ -639,6 +718,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testClassificationByLastname(){
 
         setUpScenario3();
@@ -704,6 +784,7 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    @Test
     public void testClassificationReportHistogram () {
 
         setUpScenario3();
@@ -729,13 +810,14 @@ public class BienestarControllerTest extends TestCase {
        assertEquals(expected,act);
     }
 
+    @Test
     public void testSearch(){
 
         setUpScenario2();
 
         Student s = controller.searchStudent("A00360987");
 
-        assertSame(controller.getStudents().get(21).getName(),s.getName());
+        assertEquals(controller.getStudents().get(21).getName(),s.getName());
 
         assertNull(controller.searchStudent("A00897654"));
 

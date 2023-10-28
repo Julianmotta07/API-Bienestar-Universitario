@@ -19,5 +19,7 @@ Completeness = 3.66
 
 Total number of tests at the moment: 22
 
+Notes:
+
 Correction - "editStudent" method: The student's code is only required to search for the student, but it's not 
 included in the options to edit. The validation is done in "Main".

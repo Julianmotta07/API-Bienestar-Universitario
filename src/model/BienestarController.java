@@ -324,14 +324,7 @@ public class BienestarController {
 
     public String exportData(){
         writer.writeGsonStudentsFile(GSON_FILE_NAME, students);
-        return "Model exported!.";
-    }
-
-    public void print(){
-        for (Student student: students) {
-            System.out.println(student.toString());
-            System.out.println();
-        }
+        return "Current state of the model saved successfully!";
     }
 
     public void validateID(String studentCode) throws IDException {

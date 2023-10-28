@@ -22,16 +22,15 @@ public class Main {
     public void menu(){
         int choice;
         do {
-            System.out.println("---------WELCOME TO THE MENU--------");
-            System.out.println("1: Register student.................");
-            System.out.println("2: Edit student.....................");
-            System.out.println("3: Delete student...................");
-            System.out.println("4: Generate report..................");
-            System.out.println("5: Import data......................");
-            System.out.println("6: Export current state of the model");
-            System.out.println("7: Print (temporal).................");
-            System.out.println("8: Exit.............................");
-            System.out.println("------------------------------------");
+            System.out.println("---WELCOME TO THE MENU---");
+            System.out.println("1: Register student......");
+            System.out.println("2: Edit student..........");
+            System.out.println("3: Delete student........");
+            System.out.println("4: Generate report.......");
+            System.out.println("5: Import data...........");
+            System.out.println("6: Save data.............");
+            System.out.println("7: Exit..................");
+            System.out.println("-------------------------");
             choice = sc.nextInt();
             sc.nextLine();
             switch(choice){
@@ -66,17 +65,12 @@ public class Main {
                     sc.nextLine();
                     break;
                 case 7:
-                    print();
-                    System.out.println("Press Enter to return to the menu...");
-                    sc.nextLine();
-                    break;
-                case 8:
                     break;
                 default:
                     System.out.println("Invalid option, try again!");
                     sc.nextLine();
             }
-        } while (choice != 8);
+        } while (choice != 7);
     }
 
     public void registerStudent(){
@@ -370,10 +364,6 @@ public class Main {
     public void exportModel(){
         String msg = controller.exportData();
         System.out.println(msg);
-    }
-
-    public void print(){
-        controller.print();
     }
 
 }

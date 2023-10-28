@@ -71,7 +71,7 @@ public class BienestarControllerTest extends TestCase {
         assertEquals("Maria",controller.getStudents().get(0).getName());
         assertEquals("Karen",controller.getStudents().get(33).getName());
 
-        assertEquals("Juan Jose",controller.getStudents().get(23));
+        assertEquals("Juan Jose",controller.getStudents().get(23).getName());
 
     }
 
@@ -145,12 +145,28 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
+    public  void testEditStudent2(){
+
+        setUpScenario3();
+
+        Student aux = controller.getStudents().get(0);
+
+
+        controller.editStudent("A00408965", "Mara", "Guerrero", 23, 'F',60 , 66, 1.74);
+
+       assertNotSame(aux.toString(),controller.getStudents().get(0));
+
+       controller.editStudent("A00387065", "Camila","Castillo",19,'M',72 , 70,1.82);
+
+    }
+
 
     public void testDeleteStudent() {
 
         setUpScenario2();
 
         controller.deleteStudent("A00370234");
+
         String studentNotFound =  controller.deleteStudent("A00354637");
 
         assertEquals(38,controller.getStudents().size());

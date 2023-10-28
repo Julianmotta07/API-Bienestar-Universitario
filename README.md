@@ -7,12 +7,16 @@ Students:
 - Lina Andrade
 - Deiner Julián Motta
 
-Seventh Iteration: 
+Eighth Iteration: 
 
 Quality indicators: 
 
-Error-failure density = 0.05
+Error-failure density = 0.047
 
 Reliability = 0.95
 
-Completeness = 3.33
+Completeness = 3.5
+
+Method "editStudent" failed. I don't know that te code can be modified,but it's requested by 
+parameter to search for the user. So, if the user changes the code and passes it by parameter, the output will
+tell the user that the student with the entered ID doesn't exist. 

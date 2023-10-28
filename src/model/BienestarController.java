@@ -41,7 +41,9 @@ public class BienestarController {
     }
 
     public String editStudent(String studentCode, String name, String lastName, int age, char sex, double weightS, double weightA, double height){
+
         Student student = searchStudent(studentCode);
+
         student.setName(name != null ? name : student.getName());
         student.setLastName(lastName != null ? lastName : student.getLastName());
         student.setAge(age != 0 ? age : student.getAge());

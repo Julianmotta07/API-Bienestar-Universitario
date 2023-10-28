@@ -4,7 +4,6 @@ import Exceptions.AgeException;
 import Exceptions.HeightException;
 import Exceptions.IDException;
 import Exceptions.WeightException;
-import com.google.gson.internal.bind.util.ISO8601Utils;
 import junit.framework.TestCase;
 import java.util.ArrayList;
 
@@ -48,6 +47,15 @@ public class BienestarControllerTest extends TestCase {
         controller.addStudent("A00386954","Cristina","Mendoza",21,'F',65,66,1.62);
 
 
+    }
+
+    public void setUpScenario4(){
+        controller = new BienestarController();
+
+        controller.getStudents().clear();
+
+        controller.addStudent("A00154324","Ronny","Rios",20,'F',78,78,1.80);
+        controller.addStudent("A00986756","Valeria","Espinosa",23,'F',76,75,1.65);
     }
 
 
@@ -420,30 +428,118 @@ public class BienestarControllerTest extends TestCase {
 
     }
 
-    public void testNutritionalReportList() {
+    public void testNutritionalReportListByBMI() {
 
         setUpScenario3();
 
-        assertNull(controller.getStudents());
+        String expected = """
+         Students sorted by BMI (april):
+                                
+         - Code: A00386954
+         Name: Cristina Mendoza
+         Age: 21
+         Sex: F
+         Height: 1.62
+         Sep. Weight: 65.0
+         Apr. weight: 66.0
+         Sep. BMI: 24.77
+         Apr. BMI: 25.15
+                                
+         A total of 1 students had change in their nutritional status.""";
 
+        String actual = controller.nutritionalReportList(1);
+        assertEquals(expected,actual);
+
+    }
+
+    public void testNutritionalReportListByBMIUnchanged() {
+
+       setUpScenario4();
+
+        String expected = """
+        Students sorted by BMI (april):
+        
+        A total of 0 students had change in their nutritional status.""";
+
+        String actual = controller.nutritionalReportList(1);
+        assertEquals(expected,actual);
 
 
     }
 
-    public void testClassificationReportList() {
+    public void testClassificationReportListByAge() {
 
         setUpScenario3();
 
         controller.classificationReportList(1, 2);
 
-        String expected = "\nStudents sorted by age :\n";
+        String expected = """
+                Students sorted by age:
+                
+                B:
+                - Code: A00408965
+                Name: Martina Perez
+                Age: 18
+                Sex: F
+                Height: 1.64
+                Sep. Weight: 60.0
+                Apr. weight: 66.0
+                Sep. BMI: 22.31
+                Apr. BMI: 24.54
+
+                - Code: A00397065
+                Name: Camilo Barona
+                Age: 19
+                Sex: M
+                Height: 1.82
+                Sep. Weight: 72.0
+                Apr. weight: 70.0
+                Sep. BMI: 21.74
+                Apr. BMI: 21.13
+
+                - Code: A00386954
+                Name: Cristina Mendoza
+                Age: 21
+                Sex: F
+                Height: 1.62
+                Sep. Weight: 65.0
+                Apr. weight: 66.0
+                Sep. BMI: 24.77
+                Apr. BMI: 25.15
+
+                - Code: A00345231
+                Name: Pedro Aguirre
+                Age: 24
+                Sex: M
+                Height: 1.78
+                Sep. Weight: 76.0
+                Apr. weight: 76.0
+                Sep. BMI: 23.99
+                Apr. BMI: 23.99
+
+                C:
+                - Code: A00387964
+                Name: Yeison Rodriguez
+                Age: 20
+                Sex: M
+                Height: 1.7
+                Sep. Weight: 74.0
+                Apr. weight: 74.0
+                Sep. BMI: 25.61
+                Apr. BMI: 25.61""";
 
         String actual = controller.classificationReportList(1, 2);
 
-
         assertEquals(expected,actual);
 
-        //Validar
+    }
+
+    public void testClassificationByLastname(){
+
+        String a = "A";
+
+        assertNotSame("A",a);
+
     }
 
     public void testClassificationReportHistogram () {
@@ -479,7 +575,11 @@ public class BienestarControllerTest extends TestCase {
 
         assertSame(controller.getStudents().get(21).getName(),s.getName());
 
-        //Ampliar más casos.
+        assertNull(controller.searchStudent("A00897654"));
+
+        assertNull(controller.searchStudent(""));
+
+        assertNotNull(s);
 
     }
 }

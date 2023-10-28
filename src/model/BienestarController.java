@@ -152,7 +152,7 @@ public class BienestarController {
             }
         }
 
-        return text.toString();
+        return text.toString().trim();
     }
 
     public String nutritionalReport(int mode, int filter){
@@ -239,18 +239,28 @@ public class BienestarController {
     public String nutritionalReportList(int filter){
 
         StringBuilder text = new StringBuilder("\nStudents sorted by ");
+
         if (filter == 1){
+
             text.append("BMI (april)");
+
         } else if (filter == 2){
+
             text.append("age");
+
         } else {
+
             text.append("last name");
+
         }
         text.append(":\n");
 
         ArrayList<Student> studentsFiltered = new ArrayList<>(students);
+
         selectionSort(studentsFiltered, filter);
+
         int changesCount = 0;
+
         for (Student student : studentsFiltered){
             int bmiSepCategory = getBmiCategory(student.getBmiS());
             int bmiAprCategory = getBmiCategory(student.getBmiA());
@@ -262,17 +272,23 @@ public class BienestarController {
 
         text.append("\nA total of ").append(changesCount).append(" students had change in their nutritional status.\n");
 
-        return text.toString();
+        return text.toString().trim();
     }
 
     public void selectionSort (ArrayList<Student> list, int filter){
+
         for (int i = 1; i < list.size(); i++) {
+
             Student temp = list.get(i);
+
             int j;
+
             for (j = i - 1; j >= 0 && temp.compareTo(list.get(j), filter) < 0; j--) {
                 list.set(j + 1, list.get(j));
             }
+
             list.set(j + 1, temp);
+
         }
     }
 

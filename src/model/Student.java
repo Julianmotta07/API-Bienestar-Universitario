@@ -110,14 +110,14 @@ public class Student {
     @Override
     public String toString() {
         return " Code: " + studentCode + "\n" +
-                "  Name: " + name + " " + lastName + "\n" +
-                "  Age: " + age + "\n" +
-                "  Sex: " + sex + "\n" +
-                "  height: " + height + "\n" +
-                "  Sep. Weight: " + weightS + "\n" +
-                "  Apr. weight: " + weightA + "\n" +
-                "  Sep. BMI: " + bmiS + "\n" +
-                "  Apr. BMI: " + bmiA + "\n";
+                "Name: " + name + " " + lastName + "\n" +
+                "Age: " + age + "\n" +
+                "Sex: " + sex + "\n" +
+                "Height: " + height + "\n" +
+                "Sep. Weight: " + weightS + "\n" +
+                "Apr. weight: " + weightA + "\n" +
+                "Sep. BMI: " + bmiS + "\n" +
+                "Apr. BMI: " + bmiA + "\n";
     }
 
     public int compareTo(Student o, int type) {

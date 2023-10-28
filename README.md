@@ -7,12 +7,12 @@ Students:
 - Lina Andrade
 - Deiner Julián Motta
 
-Fifth Iteration: 
+Sixth Iteration: 
 
 Quality indicators: 
 
-Error-failure density = 0.12
+Error-failure density = 0.05
 
-Reliability = 0.88
+Reliability = 0.95
 
-Completeness = 2.83
+Completeness = 3.16

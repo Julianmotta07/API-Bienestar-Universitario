@@ -15,7 +15,7 @@ public class BienestarControllerTest  {
 
     private BienestarController controller;
 
-    public void setUpScenario1() {
+    public void setUpStage1() {
 
         controller = new BienestarController();
         controller.getStudents().clear();
@@ -23,7 +23,7 @@ public class BienestarControllerTest  {
 
     }
 
-    public void setUpScenario2() {
+    public void setUpStage2() {
 
         controller = new BienestarController();
         controller.getStudents().clear();
@@ -38,7 +38,7 @@ public class BienestarControllerTest  {
 
     }
 
-    public void setUpScenario3() {
+    public void setUpStage3() {
 
         controller = new BienestarController();
 
@@ -54,13 +54,13 @@ public class BienestarControllerTest  {
     }
 
 
-    public void setUpScenario4(){
+    public void setUpStage4(){
 
         controller = new BienestarController();
 
         controller.getStudents().clear();
 
-        controller.addStudent("A00154324","Ronny","Rios",20,'F',78,78,1.80);
+        controller.addStudent("A00154324","Ronny","Rios",20,'M',78,78,1.80);
         controller.addStudent("A00986756","Valeria","Espinosa",23,'F',76,75,1.65);
     }
 
@@ -69,7 +69,7 @@ public class BienestarControllerTest  {
     //Verificar el cargue del archivo csv
     public void testAddStudentsFromCvsFile() {
 
-        setUpScenario1();
+        setUpStage1();
 
         assertNotNull(controller.getStudents());
 
@@ -85,7 +85,7 @@ public class BienestarControllerTest  {
     @Test
     public void testAddStudents (){
 
-        setUpScenario1();
+        setUpStage1();
 
         String student =  controller.addStudent("A00350678","Alejandro", "Arteaga",23,'M',60,62,1.78);
         String student2 = controller.addStudent("A00350678","Alejandro", "Arteaga",23,'M',60,62,1.78);
@@ -103,7 +103,7 @@ public class BienestarControllerTest  {
 
         try {
 
-            setUpScenario1();
+            setUpStage1();
 
             controller.addStudent("A00345674", "Vanesa","Jaramillo",-3,'F', 62,66,-1.70);
             controller.addStudent("B00345674", "Miranda","Montes",23,'F', -52,66,1.70);
@@ -138,7 +138,7 @@ public class BienestarControllerTest  {
     @Test
     public void testEditStudent(){
 
-        setUpScenario2();
+        setUpStage2();
 
         String editStudent = controller.editStudent("A00369076", "Juan", "Toledo", 23, 'M', 80, 78, 1.87);
 
@@ -157,7 +157,7 @@ public class BienestarControllerTest  {
     @Test
     public  void testEditStudent2(){
 
-        setUpScenario3();
+        setUpStage3();
 
         String[] names = {"Mara","Yeison", "Cristian", "Pedro", "Cristina"};
 
@@ -220,7 +220,7 @@ public class BienestarControllerTest  {
     @Test
     public void testDeleteStudent() {
 
-        setUpScenario2();
+        setUpStage2();
 
         controller.deleteStudent("A00370234");
 
@@ -239,7 +239,7 @@ public class BienestarControllerTest  {
     @Test
     public void deleteStudent2(){
 
-        setUpScenario4();
+        setUpStage4();
 
         controller.deleteStudent("A00154324");
         controller.deleteStudent("A00986756");
@@ -260,7 +260,7 @@ public class BienestarControllerTest  {
     @Test
     public void testgetBmiCategory() {
 
-        setUpScenario1();
+        setUpStage1();
 
         ArrayList<String> bmiCategories = new ArrayList<>();
 
@@ -303,7 +303,7 @@ public class BienestarControllerTest  {
     @Test
     public void testGenerateHistogram(){
 
-        setUpScenario1();
+        setUpStage1();
 
         int lowWeight = 0;
 
@@ -372,7 +372,7 @@ public class BienestarControllerTest  {
     @Test
     public void testSelectionSortByAge (){
 
-        setUpScenario3();
+        setUpStage3();
 
         StringBuilder act = new StringBuilder();
 
@@ -400,7 +400,7 @@ public class BienestarControllerTest  {
     @Test
     public void testSelectionSortByLastName (){
 
-        setUpScenario3();
+        setUpStage3();
 
         StringBuilder result = new StringBuilder();
 
@@ -430,7 +430,7 @@ public class BienestarControllerTest  {
     @Test
     public void testSelectionSortByBMISep (){
 
-        setUpScenario3();
+        setUpStage3();
 
         StringBuilder result = new StringBuilder();
 
@@ -460,7 +460,7 @@ public class BienestarControllerTest  {
     @Test
     public void testSelectionSortByBMIApr(){
 
-        setUpScenario3();
+        setUpStage3();
 
         StringBuilder result = new StringBuilder();
 
@@ -491,7 +491,7 @@ public class BienestarControllerTest  {
     public void testNutritionalReportIndicators() {
 
 
-        setUpScenario1();
+        setUpStage1();
 
         ArrayList <Student> studentsOnTrial = new ArrayList<>();
 
@@ -529,7 +529,7 @@ public class BienestarControllerTest  {
     @Test
     public void testNutritionalReportListByBMI() {
 
-        setUpScenario3();
+        setUpStage3();
 
         String expected = """
          Students sorted by BMI (april):
@@ -554,7 +554,7 @@ public class BienestarControllerTest  {
     @Test
     public void testNutritionalReportListByBMIUnchanged() {
 
-       setUpScenario4();
+       setUpStage4();
 
         String expected = """
         Students sorted by BMI (april):
@@ -570,7 +570,7 @@ public class BienestarControllerTest  {
     @Test
     public void testNutritionalReportListByAge(){
 
-        setUpScenario2();
+        setUpStage2();
 
         String expected = """
                 Students sorted by age:
@@ -653,9 +653,93 @@ public class BienestarControllerTest  {
     }
 
     @Test
+    public void testNutritionalReportListByLastname(){
+
+        setUpStage2();
+
+        String expected = """
+                Students sorted by last name:
+                
+                - Code: A00380345
+                Name: Pablo Blandon
+                Age: 20
+                Sex: M
+                Height: 1.71
+                Sep. Weight: 75.0
+                Apr. weight: 73.0
+                Sep. BMI: 25.65
+                Apr. BMI: 24.96
+                
+                - Code: A00380776
+                Name: Maria Garcia
+                Age: 20
+                Sex: F
+                Height: 1.72
+                Sep. Weight: 97.0
+                Apr. weight: 86.0
+                Sep. BMI: 32.79
+                Apr. BMI: 29.07
+                                
+                - Code: A00380779
+                Name: Maria Carmen Hernandez
+                Age: 19
+                Sex: F
+                Height: 1.62
+                Sep. Weight: 72.0
+                Apr. weight: 59.0
+                Sep. BMI: 27.43
+                Apr. BMI: 22.48
+                
+                - Code: A00370987
+                Name: Josefa Lopez
+                Age: 21
+                Sex: F
+                Height: 1.74
+                Sep. Weight: 93.0
+                Apr. weight: 88.0
+                Sep. BMI: 30.72
+                Apr. BMI: 29.07
+                                
+                - Code: A00347601
+                Name: Cristina Moreno
+                Age: 24
+                Sex: F
+                Height: 1.66
+                Sep. Weight: 68.0
+                Apr. weight: 69.0
+                Sep. BMI: 24.68
+                Apr. BMI: 25.04
+                
+                - Code: A00370864
+                Name: Jose Antonio Munoz
+                Age: 20
+                Sex: O
+                Height: 1.69
+                Sep. Weight: 53.0
+                Apr. weight: 52.0
+                Sep. BMI: 18.56
+                Apr. BMI: 18.21
+                
+                - Code: A00356473
+                Name: Jose Perez
+                Age: 24
+                Sex: M
+                Height: 1.7
+                Sep. Weight: 50.0
+                Apr. weight: 57.0
+                Sep. BMI: 17.3
+                Apr. BMI: 19.72
+                                
+                A total of 7 students had change in their nutritional status.""";
+
+        String actual = controller.nutritionalReportList(3);
+
+        assertEquals(expected,actual);
+    }
+    @Test
     public void testClassificationReportListByAge() {
 
-        setUpScenario3();
+        setUpStage3();
 
        String expected = """
                 Students sorted by age:
@@ -721,7 +805,7 @@ public class BienestarControllerTest  {
     @Test
     public void testClassificationByLastname(){
 
-        setUpScenario3();
+        setUpStage3();
 
         String expected = """
                 Students sorted by last name:
@@ -787,7 +871,7 @@ public class BienestarControllerTest  {
     @Test
     public void testClassificationReportHistogram () {
 
-        setUpScenario3();
+        setUpStage3();
 
         String act = controller.classificationReportHistogram(1);
 
@@ -813,7 +897,7 @@ public class BienestarControllerTest  {
     @Test
     public void testSearch(){
 
-        setUpScenario2();
+        setUpStage2();
 
         Student s = controller.searchStudent("A00360987");
 

@@ -237,7 +237,7 @@ public class BienestarControllerTest  {
     }
 
     @Test
-    public void deleteStudent2(){
+    public void testDeleteStudent2(){
 
         setUpStage4();
 
@@ -258,7 +258,7 @@ public class BienestarControllerTest  {
 
      */
     @Test
-    public void testgetBmiCategory() {
+    public void testGetBmiCategory() {
 
         setUpStage1();
 

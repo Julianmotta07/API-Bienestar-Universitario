@@ -10,7 +10,7 @@ public class DataWriterTest extends TestCase {
 
     private DataWriter dataWriter;
 
-    public void setUpScenario1() {
+    public void setUpStage1() {
 
         dataWriter = new DataWriter();
 
@@ -18,7 +18,7 @@ public class DataWriterTest extends TestCase {
 
     public void testBytesToTxTReport(){
 
-        setUpScenario1();
+        setUpStage1();
 
         String pathName = "unitTest.txt";
 

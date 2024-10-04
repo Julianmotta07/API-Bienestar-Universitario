@@ -1,21 +1,57 @@
 ====================================================================================
                            CHANGES IN NUTRITIONAL STATUS                                
 ====================================================================================
+Students sorted by age:
 
-5 students had change in their nutritional status.
+- Code: A00380779
+Name: Maria Carmen Hernandez
+Age: 19
+Sex: F
+Height: 1.62
+Sep. Weight: 72.0
+Apr. weight: 59.0
+Sep. BMI: 27.43
+Apr. BMI: 22.48
 
-3 students presented a favorable change in their health, distributed as follows:
+- Code: A00380776
+Name: Maria Garcia
+Age: 20
+Sex: F
+Height: 1.72
+Sep. Weight: 97.0
+Apr. weight: 86.0
+Sep. BMI: 32.79
+Apr. BMI: 29.07
 
-0 changed from low weight to normal weight.
-1 changed from overweight to normal weight.
-2 changed from obesity to overweight or normal weight.
-0 changed from morbid weight to overweight or normal weight.
+- Code: A00370864
+Name: Jose Antonio Munoz
+Age: 20
+Sex: O
+Height: 1.69
+Sep. Weight: 53.0
+Apr. weight: 52.0
+Sep. BMI: 18.56
+Apr. BMI: 18.21
 
-2 students presented an unfavorable change in their health, distributed as follows:
+- Code: A00370987
+Name: Josefa Lopez
+Age: 21
+Sex: F
+Height: 1.74
+Sep. Weight: 93.0
+Apr. weight: 88.0
+Sep. BMI: 30.72
+Apr. BMI: 29.07
 
-1 changed from normal weight to low weight.
-1 changed from normal weight to overweight or obesity.
-0 changed from overweight to obesity or morbid obesity.
-0 changed from obesity to morbid obesity.
+- Code: A00347601
+Name: Cristina Moreno
+Age: 24
+Sex: F
+Height: 1.66
+Sep. Weight: 68.0
+Apr. weight: 69.0
+Sep. BMI: 24.68
+Apr. BMI: 25.04
 
+A total of 5 students had change in their nutritional status.
 ====================================================================================
